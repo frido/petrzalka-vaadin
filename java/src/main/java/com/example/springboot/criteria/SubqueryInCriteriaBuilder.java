@@ -4,7 +4,7 @@ import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 import javax.persistence.metamodel.SingularAttribute;
 
-public class SubqueryInCriteriaBuilder<R, S, I> implements InterfaceCriteriaBuilder<R>{
+public class SubqueryInCriteriaBuilder<R, S> implements InterfaceCriteriaBuilder<R>{
 
 
     private final SingularAttribute<R, Integer> attribute1;

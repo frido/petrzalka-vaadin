@@ -42,7 +42,7 @@ public class MainRunner  {
     }
 
     private List<Page> budgetPageGenerator(List<Integer> years) {
-        return years.stream().map(year -> new BudgetDetailPage(budgetService.getBudgetByYear(year))).collect(Collectors.toList());
+        return years.stream().map(year -> new BudgetDetailPage(budgetService.getBudgetProject(2021))).collect(Collectors.toList());
     }
 
     private List<Page> projectsPageGenerator() {

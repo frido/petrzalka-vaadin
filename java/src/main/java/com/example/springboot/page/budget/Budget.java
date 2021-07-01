@@ -2,6 +2,7 @@ package com.example.springboot.page.budget;
 
 import com.example.springboot.page.project.Program;
 import com.example.springboot.page.project.ProgramAttributeConverter;
+import com.example.springboot.page.project.Project;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -24,7 +25,11 @@ public class Budget {
     private String comment;
     @Enumerated(EnumType.STRING)
     private BudgetStatus status;
-    // TODO: previous column
+    @ManyToOne()
+    @JoinColumn(name = "project_id", referencedColumnName = "id")
+    private BudgetProject project;
+    @Column(name = "project_id", insertable = false, updatable = false)
+    private Integer projectId;
 
     public int getId() {
         return id;
@@ -96,6 +101,22 @@ public class Budget {
 
     public void setStatus(BudgetStatus status) {
         this.status = status;
+    }
+
+    public BudgetProject getProject() {
+        return project;
+    }
+
+    public void setProject(BudgetProject project) {
+        this.project = project;
+    }
+
+    public Integer getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(Integer projectId) {
+        this.projectId = projectId;
     }
 
     @Override
