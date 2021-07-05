@@ -1,5 +1,6 @@
 package com.example.springboot.page.project;
 
+import com.example.springboot.Configuration;
 import com.example.springboot.component.Figure;
 import com.example.springboot.component.PageHeader;
 import com.example.springboot.component.Title;
@@ -12,7 +13,8 @@ public class ProjectDetailPage extends BasePage {
 
     private final Project project;
 
-    public ProjectDetailPage(Project project) {
+    public ProjectDetailPage(Configuration conf, Project project) {
+        super(conf);
         this.project = project;
     }
 

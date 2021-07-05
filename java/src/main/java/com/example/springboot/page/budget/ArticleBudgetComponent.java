@@ -1,67 +1,78 @@
 package com.example.springboot.page.budget;
 
+import com.example.springboot.component.Amount;
 import com.example.springboot.component.PageHeader;
 import com.example.springboot.html.*;
-import com.example.springboot.model.Statement;
-import com.example.springboot.page.project.Project;
 import com.example.springboot.page.project.ProjectStatus;
+
+import java.math.BigDecimal;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ArticleBudgetComponent extends HtmlTag {
 
     private final BudgetProject project;
-    private final boolean isFull;
+    private final int year;
 
-    public ArticleBudgetComponent(BudgetProject project, boolean isFull) {
+    public ArticleBudgetComponent(BudgetProject project, int year) {
         super("div");
         this.project = project;
-        this.isFull = isFull;
+        this.year = year;
     }
 
     @Override
     public String toString() {
-        addContent(article(project));
+        addContent(article());
         return super.toString();
     }
 
-    private HtmlTag article(BudgetProject project) {
+    private HtmlTag article() {
         HtmlTag article = new HtmlTag("article");
         article.clazz("box").clazz(ProjectStatus.INWORK.clazz());
         Row row = (Row) article.createContent(new Row());
-        HtmlTag header = row.column("col-md-10");
-//                .with(new H(5)
-//                        .clazz("status-text")
-//                        .clazz(project.getStatus().clazz())
-//                        .with(project.getPhase().getLabel()));
-        if (isFull) {
-            header.with(new H(3)
-                    .with(new AHref(resolve(project.getUrl()), project.getTitle())));
-        }
+        row.column("col-md-10").createContent(new H(3)).with(project.getTitle());
         row.column("col-md-2 text-right")
-                .with(statusText(ProjectStatus.INWORK.label(), ProjectStatus.INWORK.clazz()));
-        Row content = (Row) article.createContent(new Row());
-        HtmlTag cardContent = null;
-        if (!isFull) {
-            cardContent = content.column("col-md-12");
-        }
-        else {
-            content.column("col-md-3").with(new Img(null,null).clazz("card-img"));
-            cardContent = content.column("col-md-9").with(new Div("project-description").with(project.getDescription()));
-        }
-        HtmlTag statementList = cardContent.createContent(new Div("statement-list"));
-
-        project.getBudgets().forEach(s -> statementList.addContent(statement(s)));
+                .with(statusText(Amount.of(project.getAmount(year)), ProjectStatus.INWORK.clazz()));
+        article.createContent(new Div("budget-list")).with(budget());
         return article;
     }
 
-    private String resolve(String url) {
-        return PageHeader.POSTS + url + "/";
+    private HtmlTag budget() {
+        HtmlTag row = new Div("budget-row");
+        for (Integer year : project.getYears()) {
+            Row budgetRow = (Row) row.createContent(new Row());
+            if (this.year != year) {
+                budgetRow.clazz("small");
+            }
+            budgetRow.column("col-md-1").with(String.valueOf(year));
+            budgetRow.column("col-md-2").with(statusText(Amount.of(project.getAmount(year)), getProjectStatus(project, year)));
+            HtmlTag budgetList = budgetRow.column("col-md-9");
+            project.getBudgets(year).forEach(i -> budgetList.with(budgetItem(i)));
+
+        }
+        return row;
     }
 
-    private HtmlTag statement(Budget statement) {
-        HtmlTag row = new Div("statement-row");
-        row.with(new Span("", statement.getTitle()));
-        row.with(new Span("muted", String.valueOf(statement.getYear())));
-        return row;
+    private HtmlTag budgetItem(Budget i) {
+        Row budgetItemRow = new Row();
+        budgetItemRow.column("col-md-12")
+                .with(i.getTitle())
+                .with(" - ")
+                .with(statusText(Amount.of(i.getAmount()), getProjectStatus(i)));
+        if(i.getShowComment()) {
+            budgetItemRow.column("col-md-12").with(i.getComment()).clazz("muted");
+        }
+        return budgetItemRow;
+    }
+
+    private String getProjectStatus(BudgetProject project, Integer yearBudget) {
+        return project.getBudgets(yearBudget).stream().allMatch(Budget::getUseAmountReal) ? ProjectStatus.DONE.clazz() : ProjectStatus.INWORK.clazz();
+    }
+
+    private String getProjectStatus(Budget budget) {
+        return budget.getUseAmountReal() ? ProjectStatus.DONE.clazz() : ProjectStatus.INWORK.clazz();
     }
 
     private HtmlTag statusText(String text, String clazz) {

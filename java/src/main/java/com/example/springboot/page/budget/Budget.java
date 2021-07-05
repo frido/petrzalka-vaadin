@@ -30,6 +30,10 @@ public class Budget {
     private BudgetProject project;
     @Column(name = "project_id", insertable = false, updatable = false)
     private Integer projectId;
+    @Column(name = "use_amount_real")
+    private Boolean useAmountReal;
+    @Column(name = "show_comment")
+    private Boolean showComment;
 
     public int getId() {
         return id;
@@ -132,5 +136,25 @@ public class Budget {
                 ", comment='" + comment + '\'' +
                 ", status=" + status +
                 '}';
+    }
+
+    public BigDecimal getAmount() {
+        return useAmountReal ? amountReal : amountOriginal;
+    }
+
+    public Boolean getUseAmountReal() {
+        return useAmountReal;
+    }
+
+    public void setUseAmountReal(Boolean useAmountReal) {
+        this.useAmountReal = useAmountReal;
+    }
+
+    public Boolean getShowComment() {
+        return showComment;
+    }
+
+    public void setShowComment(Boolean showComment) {
+        this.showComment = showComment;
     }
 }

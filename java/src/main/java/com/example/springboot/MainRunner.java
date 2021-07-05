@@ -29,23 +29,23 @@ public class MainRunner  {
     @Autowired
     ProjectService projectService;
 
-    public void run(String... args) throws Exception {
+    public void run(Configuration config) throws Exception {
         System.out.println("It Works!");
 
-        PageWriter pw = new PageWriter(new Configuration());
-        pw.write(new IndexPage(budgetService, grantService, projectService));
-        pw.write(new ProjectPage(projectService));
-        pw.write(new GrantPage(grantService));
-        pw.write(new BudgetPage(budgetService));
-        projectsPageGenerator().forEach(pw::write);
-        budgetPageGenerator(List.of(2020, 2021)).forEach(pw::write);
+        PageWriter pw = new PageWriter(config);
+        pw.write(new IndexPage(config, budgetService, grantService, projectService));
+        pw.write(new ProjectPage(config, projectService));
+        pw.write(new GrantPage(config, grantService));
+        pw.write(new BudgetPage(config, budgetService));
+        projectsPageGenerator(config).forEach(pw::write);
+        budgetPageGenerator(config, List.of(2020, 2021)).forEach(pw::write);
     }
 
-    private List<Page> budgetPageGenerator(List<Integer> years) {
-        return years.stream().map(year -> new BudgetDetailPage(budgetService.getBudgetProject(2021))).collect(Collectors.toList());
+    private List<Page> budgetPageGenerator(Configuration config, List<Integer> years) {
+        return years.stream().map(year -> new BudgetDetailPage(config, year, budgetService.getBudgetProject(year))).collect(Collectors.toList());
     }
 
-    private List<Page> projectsPageGenerator() {
-        return projectService.getAllProjects().stream().map(ProjectDetailPage::new).collect(Collectors.toList());
+    private List<Page> projectsPageGenerator(Configuration config) {
+        return projectService.getAllProjects().stream().map(p -> new ProjectDetailPage(config, p)).collect(Collectors.toList());
     }
 }

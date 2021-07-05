@@ -1,5 +1,6 @@
 package com.example.springboot.page.grant;
 
+import com.example.springboot.Configuration;
 import com.example.springboot.component.PageHeader;
 import com.example.springboot.component.Title;
 import com.example.springboot.html.HtmlTag;
@@ -12,8 +13,8 @@ public class GrantPage extends BasePage {
 
     private final GrantService grantService;
 
-    public GrantPage(GrantService grantService) {
-        super();
+    public GrantPage(Configuration conf, GrantService grantService) {
+        super(conf);
         this.grantService = grantService;
     }
 

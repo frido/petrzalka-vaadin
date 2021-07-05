@@ -1,5 +1,6 @@
 package com.example.springboot.page;
 
+import com.example.springboot.Configuration;
 import com.example.springboot.page.budget.ArticleBudgetListComponent;
 import com.example.springboot.page.project.ArticleProjectListComponent;
 import com.example.springboot.page.grant.ArticleSportListComponent;
@@ -17,7 +18,8 @@ public class IndexPage extends BasePage {
     private final GrantService grantService;
     private final ProjectService projectService;
 
-    public IndexPage(BudgetService budgetService, GrantService grantService, ProjectService projectService) {
+    public IndexPage(Configuration conf, BudgetService budgetService, GrantService grantService, ProjectService projectService) {
+        super(conf);
         this.budgetService = budgetService;
         this.grantService = grantService;
         this.projectService = projectService;

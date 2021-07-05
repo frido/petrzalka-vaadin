@@ -1,14 +1,12 @@
 package com.example.springboot.page.budget;
 
-import com.example.springboot.model.Statement;
-import com.example.springboot.page.project.Image;
-import com.example.springboot.page.project.ProjectPhase;
-import com.example.springboot.page.project.ProjectStatus;
-
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "budget_project")
@@ -60,5 +58,23 @@ public class BudgetProject {
 
     public void setBudgets(Set<Budget> budgets) {
         this.budgets = budgets;
+    }
+
+    @Transient
+    public BigDecimal getAmount(int year) {
+        return budgets.stream().filter(p -> p.getYear() == year).map(Budget::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    @Transient
+    public List<Integer> getYears() {
+        return budgets.stream().map(Budget::getYear).distinct().sorted(Comparator.reverseOrder()).collect(Collectors.toList());
+    }
+
+    @Transient
+    public List<Budget> getBudgets(Integer year) {
+        return budgets.stream()
+                .filter(b -> b.getYear() == year)
+                .sorted(Comparator.comparing(Budget::getAmount).reversed())
+                .collect(Collectors.toList());
     }
 }

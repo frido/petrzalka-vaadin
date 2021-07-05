@@ -1,5 +1,6 @@
 package com.example.springboot.page.budget;
 
+import com.example.springboot.Configuration;
 import com.example.springboot.component.PageHeader;
 import com.example.springboot.component.Title;
 import com.example.springboot.component.Amount;
@@ -12,8 +13,8 @@ public class BudgetPage extends BasePage {
 
     private final BudgetService budgetService;
 
-    public BudgetPage(BudgetService budgetService) {
-        super();
+    public BudgetPage(Configuration conf, BudgetService budgetService) {
+        super(conf);
         this.budgetService = budgetService;
     }
 

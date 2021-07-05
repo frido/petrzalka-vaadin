@@ -1,5 +1,6 @@
 package com.example.springboot.page.budget;
 
+import com.example.springboot.Configuration;
 import com.example.springboot.component.PageHeader;
 import com.example.springboot.component.Title;
 import com.example.springboot.html.HtmlTag;
@@ -13,10 +14,13 @@ import java.util.List;
 // TODO - aplikovat ArticleBudgetListComponent2 so spravnym rokom v tejto detailovej stranke ale aj v BudgetPage nejakym sposobom
 public class BudgetDetailPage extends BasePage {
 
-    private final List<BudgetProject> budgetByYear;
+    private final Integer year;
+    private final List<BudgetProject> budgetProject;
 
-    public BudgetDetailPage(List<BudgetProject> budgetByYear) {
-        this.budgetByYear = budgetByYear;
+    public BudgetDetailPage(Configuration conf, Integer year, List<BudgetProject> budgetProject) {
+        super(conf);
+        this.year = year;
+        this.budgetProject = budgetProject;
     }
 
     @Override
@@ -26,12 +30,12 @@ public class BudgetDetailPage extends BasePage {
 
     private HtmlTag budgets() {
         return new Section()
-                .with(new Title("Investičný plán " + "2021"))
-                .with(new ArticleBudgetListComponent2(budgetByYear));
+                .with(new Title("Investičný plán " + year))
+                .with(new ArticleBudgetListComponent2(budgetProject, year));
     }
 
     @Override
     public String getFileName() {
-        return PageHeader.BUDGET + "2021" + "/index";
+        return PageHeader.BUDGET + year + "/index";
     }
 }

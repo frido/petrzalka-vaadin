@@ -1,5 +1,6 @@
 package com.example.springboot.page.project;
 
+import com.example.springboot.Configuration;
 import com.example.springboot.component.PageHeader;
 import com.example.springboot.component.Title;
 import com.example.springboot.html.HtmlTag;
@@ -10,8 +11,8 @@ public class ProjectPage extends BasePage {
 
     protected final ProjectService projectService;
 
-    public ProjectPage(ProjectService projectService) {
-        super();
+    public ProjectPage(Configuration conf, ProjectService projectService) {
+        super(conf);
         this.projectService = projectService;
     }
 

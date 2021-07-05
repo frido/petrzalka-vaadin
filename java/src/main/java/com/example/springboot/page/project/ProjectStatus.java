@@ -1,9 +1,10 @@
 package com.example.springboot.page.project;
 
-import static com.example.springboot.component.CssClass.STATUS_INWORK;
+import static com.example.springboot.component.CssClass.*;
 
 public enum ProjectStatus {
-    INWORK("prebieha", STATUS_INWORK);
+    INWORK("prebieha", BUDGET_PLANED),
+    DONE("hotovo", BUDGET_DONE);
 
     private final String label;
     private final String status;

@@ -1,14 +1,16 @@
 package com.example.springboot.component;
 
 import com.example.springboot.html.*;
+import com.example.springboot.page.ConfigurationProvider;
 import com.example.springboot.page.HeadProvider;
 
 public class Head extends HtmlTag {
 
-    public Head(HeadProvider headProvider) {
+    public Head(ConfigurationProvider configProvider, HeadProvider headProvider) {
         super("head");
+        Base base = new Base(configProvider.getConfig().getBase());
         googleAnalytics();
-        addContent(new HtmlTag("base").as("href", Base.resolve("/")));
+        addContent(new HtmlTag("base").as("href", base.resolve("/")));
         addContent(new HtmlTag("title").with(headProvider.getTitle()));
         addContent(new HtmlTag("meta").as("charset", "utf-8"));
         addContent(new Meta("Description",headProvider.getDescription()));
