@@ -35,6 +35,10 @@ public class BudgetService {
         return budgetProjects;
     }
 
+    public List<Budget> findAllBudgeets() {
+        return em.createQuery("Select b from Budget b", Budget.class).getResultList();
+    }
+
     private List<Budget> findByCriteria(InterfaceCriteriaBuilder<Budget> criteriaBuilder, int limit) {
         return new CriteriaQueryContext<>(em, Budget.class).apply(criteriaBuilder).apply(defaultOrder).getResultList(limit);
     }

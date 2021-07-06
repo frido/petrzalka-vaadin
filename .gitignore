@@ -2,3 +2,4 @@
 /java/target/
 vaadin/_site/
 .idea
+node_modules/

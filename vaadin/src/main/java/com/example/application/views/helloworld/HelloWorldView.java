@@ -34,7 +34,7 @@ public class HelloWorldView extends Div {
         addClassName("hello-world-view");
         outDirField = new TextField("Output Dir");
         baseField = new ComboBox<>("Base");
-        baseField.setItems(Arrays.asList("", "C:\\home\\repos\\petrzalka-vaadin\\vaadin\\_site"));
+        baseField.setItems(Arrays.asList("", "C:\\home\\repos\\frido.github.io"));
         generateBtn = new Button("Generate");
 
         Configuration config = new Configuration();
