@@ -9,6 +9,11 @@ import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -48,6 +53,16 @@ public class BudgetService {
                 .collect(Collectors.toList());
     }
 
+    public <T> List<T> findAll(Class<T> clazz) {
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<T> cq = cb.createQuery(clazz);
+        Root<T> rootEntry = cq.from(clazz);
+        CriteriaQuery<T> all = cq.select(rootEntry);
+
+        TypedQuery<T> allQuery = em.createQuery(all);
+        return allQuery.getResultList();
+    }
+
     private List<Budget> findByCriteria(InterfaceCriteriaBuilder<Budget> criteriaBuilder, int limit) {
         return new CriteriaQueryContext<>(em, Budget.class).apply(criteriaBuilder).apply(defaultOrder).getResultList(limit);
     }
@@ -60,5 +75,16 @@ public class BudgetService {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setAmbiguityIgnored(true);
         return Optional.of(em.find(Budget.class, id)).map(e -> modelMapper.map(e, BudgetDto.class));
+    }
+
+    @Transactional // TODO naco, preco?
+    public void update(BudgetDto budget) {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setAmbiguityIgnored(true);
+        Budget entity =  modelMapper.map(budget, Budget.class);
+        System.out.println("3");
+        System.out.println(entity);
+        em.merge(entity); // TODO: version, optimistic lock
+        em.flush();
     }
 }

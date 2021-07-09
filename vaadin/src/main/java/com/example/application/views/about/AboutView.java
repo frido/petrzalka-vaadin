@@ -21,6 +21,8 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.data.provider.DataProvider;
+import com.vaadin.flow.data.renderer.Renderer;
+import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
@@ -29,6 +31,7 @@ import com.example.application.views.main.MainView;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Optional;
+import java.util.function.Function;
 
 @PageTitle("About")
 @Route(value = "about/:samplePersonID?/:action?(edit)", layout = MainView.class)
@@ -77,7 +80,7 @@ public class AboutView extends Div implements BeforeEnterObserver {
         grid.addColumn("amountReal").setAutoWidth(true);
         grid.addColumn("comment").setAutoWidth(true);
         grid.addColumn("status").setAutoWidth(true);
-        grid.addColumn("project").setAutoWidth(true);
+        grid.addColumn(this.generalRenderer(BudgetDto::getProject, BudgetProject::getTitle)).setAutoWidth(true);
         grid.addColumn("useAmountReal").setAutoWidth(true);
         grid.addColumn("showComment").setAutoWidth(true);
 
@@ -124,9 +127,13 @@ public class AboutView extends Div implements BeforeEnterObserver {
                 if (this.samplePerson == null) {
                     this.samplePerson = new BudgetDto();
                 }
+                System.out.println("1");
+                System.out.println(this.samplePerson);
                 binder.writeBean(this.samplePerson);
+                System.out.println("2");
+                System.out.println(this.samplePerson);
 
-//                samplePersonService.update(this.samplePerson);
+                budgetService.update(this.samplePerson);
                 clearForm();
                 refreshGrid();
                 Notification.show("SamplePerson details stored.");
@@ -135,6 +142,10 @@ public class AboutView extends Div implements BeforeEnterObserver {
                 Notification.show("An exception happened while trying to store the samplePerson details.");
             }
         });
+    }
+
+    private <S, T>ValueProvider<S, String> generalRenderer(Function<S, T> bean, Function<T, String> str) {
+        return x -> str.apply(bean.apply(x));
     }
 
     private void refreshGrid() {
@@ -173,7 +184,8 @@ public class AboutView extends Div implements BeforeEnterObserver {
         status = new ComboBox<>("status");
         status.setItems(BudgetStatus.values());
         project = new ComboBox<>("project");
-//        project.setDataProvider(); TODO: lazy
+        project.setItems(budgetService.findAll(BudgetProject.class)); //TODO: lazy
+        project.setItemLabelGenerator(BudgetProject::getTitle);
         useAmountReal = new Checkbox("useAmountReal");
         showComment = new Checkbox("showComment");
         Component[] fields = new Component[]{title, year, program, amountOriginal,
