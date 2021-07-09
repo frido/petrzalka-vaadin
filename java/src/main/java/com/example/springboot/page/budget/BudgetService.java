@@ -4,11 +4,14 @@ import com.example.springboot.criteria.*;
 import com.example.springboot.page.grant.GrantItem;
 import com.example.springboot.page.grant.GrantItem_;
 import com.example.springboot.page.grant.GrantSubject_;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 public class BudgetService {
@@ -35,8 +38,14 @@ public class BudgetService {
         return budgetProjects;
     }
 
-    public List<Budget> findAllBudgeets() {
-        return em.createQuery("Select b from Budget b", Budget.class).getResultList();
+    public List<BudgetDto> findAllBudgeets() {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setAmbiguityIgnored(true);
+        return em.createQuery("Select b from Budget b", Budget.class)
+                .getResultList()
+                .stream()
+                .map(e -> modelMapper.map(e, BudgetDto.class))
+                .collect(Collectors.toList());
     }
 
     private List<Budget> findByCriteria(InterfaceCriteriaBuilder<Budget> criteriaBuilder, int limit) {
@@ -45,5 +54,11 @@ public class BudgetService {
 
     private List<BudgetProject> findByCriteria2(InterfaceCriteriaBuilder<BudgetProject> criteriaBuilder, int limit) {
         return new CriteriaQueryContext<>(em, BudgetProject.class).apply(criteriaBuilder).apply(defaultOrder2).getResultList(limit);
+    }
+
+    public Optional<BudgetDto> get(Integer id) {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setAmbiguityIgnored(true);
+        return Optional.of(em.find(Budget.class, id)).map(e -> modelMapper.map(e, BudgetDto.class));
     }
 }

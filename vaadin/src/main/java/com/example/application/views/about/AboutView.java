@@ -1,12 +1,15 @@
 package com.example.application.views.about;
 
-import com.example.springboot.page.budget.Budget;
-import com.example.springboot.page.budget.BudgetService;
+import com.example.springboot.page.budget.*;
+import com.example.springboot.page.project.Program;
+import com.example.springboot.page.project.Project;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasStyle;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.checkbox.Checkbox;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
@@ -18,25 +21,40 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.data.provider.DataProvider;
+import com.vaadin.flow.router.BeforeEnterEvent;
+import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.PageTitle;
 import com.example.application.views.main.MainView;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@Route(value = "about", layout = MainView.class)
-@PageTitle("About")
-public class AboutView extends Div {
+import java.util.Optional;
 
-    private final String SAMPLEPERSON_EDIT_ROUTE_TEMPLATE = "master-detail/%d/edit";
+@PageTitle("About")
+@Route(value = "about/:samplePersonID?/:action?(edit)", layout = MainView.class)
+public class AboutView extends Div implements BeforeEnterObserver {
+
+    private final String SAMPLEPERSON_ID = "samplePersonID";
+    private final String SAMPLEPERSON_EDIT_ROUTE_TEMPLATE = "about/%d/edit";
 
     private final BudgetService budgetService;
-    private Grid<Budget> grid = new Grid<>(Budget.class, false);
-    private BeanValidationBinder<Budget> binder;
+    private Grid<BudgetDto> grid = new Grid<>(BudgetDto.class, false);
+    private BeanValidationBinder<BudgetDto> binder;
     private Button cancel = new Button("Cancel");
     private Button save = new Button("Save");
     private TextField title;
+    private TextField year;
+    private ComboBox<Program> program;
+    private TextField amountOriginal;
+    private TextField amountUpdated;
+    private TextField amountReal;
+    private TextField comment;
+    private ComboBox<BudgetStatus> status;
+    private ComboBox<BudgetProject> project;
+    private Checkbox useAmountReal;
+    private Checkbox showComment;
 
-    private Budget samplePerson;
+    private BudgetDto samplePerson;
 
     public AboutView(@Autowired BudgetService budgetService) {
         this.budgetService = budgetService;
@@ -80,10 +98,21 @@ public class AboutView extends Div {
         });
 
         // Configure Form
-        binder = new BeanValidationBinder<>(Budget.class);
+        binder = new BeanValidationBinder<>(BudgetDto.class);
 
         // Bind fields. This where you'd define e.g. validation rules
-        binder.bindInstanceFields(this);
+//        binder.bindInstanceFields(this);
+        binder.forField(title).bind("title");
+        binder.forField(year).withConverter(new IntegerConverter()).bind("year");
+        binder.forField(program).bind("program");
+        binder.forField(amountOriginal).withConverter(new DecimalConverter()).bind("amountOriginal");
+        binder.forField(amountUpdated).withConverter(new DecimalConverter()).bind("amountUpdated");
+        binder.forField(amountReal).withConverter(new DecimalConverter()).bind("amountReal");
+        binder.forField(comment).bind("comment");
+        binder.forField(status).bind("status");
+        binder.forField(project).bind("project");
+        binder.forField(useAmountReal).bind("useAmountReal");
+        binder.forField(showComment).bind("showComment");
 
         cancel.addClickListener(e -> {
             clearForm();
@@ -93,7 +122,7 @@ public class AboutView extends Div {
         save.addClickListener(e -> {
             try {
                 if (this.samplePerson == null) {
-                    this.samplePerson = new Budget();
+                    this.samplePerson = new BudgetDto();
                 }
                 binder.writeBean(this.samplePerson);
 
@@ -118,10 +147,9 @@ public class AboutView extends Div {
     }
 
 
-    private void populateForm(Budget value) {
+    private void populateForm(BudgetDto value) {
         this.samplePerson = value;
         binder.readBean(this.samplePerson);
-
     }
 
     private void createEditorLayout(SplitLayout splitLayout) {
@@ -134,8 +162,23 @@ public class AboutView extends Div {
         editorLayoutDiv.add(editorDiv);
 
         FormLayout formLayout = new FormLayout();
-        title = new TextField("First Name");
-        Component[] fields = new Component[]{title};
+        title = new TextField("title");
+        year = new TextField("year");
+        program = new ComboBox<>("program");
+        program.setItems(Program.values());
+        amountOriginal = new TextField("amountOriginal");
+        amountUpdated = new TextField("amountUpdated");
+        amountReal = new TextField("amountReal");
+        comment = new TextField("comment");
+        status = new ComboBox<>("status");
+        status.setItems(BudgetStatus.values());
+        project = new ComboBox<>("project");
+//        project.setDataProvider(); TODO: lazy
+        useAmountReal = new Checkbox("useAmountReal");
+        showComment = new Checkbox("showComment");
+        Component[] fields = new Component[]{title, year, program, amountOriginal,
+                amountUpdated, amountReal, comment, status, project, useAmountReal,
+                showComment};
 
         for (Component field : fields) {
             ((HasStyle) field).addClassName("full-width");
@@ -164,6 +207,25 @@ public class AboutView extends Div {
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         buttonLayout.add(save, cancel);
         editorLayoutDiv.add(buttonLayout);
+    }
+
+    @Override
+    public void beforeEnter(BeforeEnterEvent event) {
+        Optional<Integer> samplePersonId = event.getRouteParameters().getInteger(SAMPLEPERSON_ID);
+        if (samplePersonId.isPresent()) {
+            Optional<BudgetDto> samplePersonFromBackend = budgetService.get(samplePersonId.get());
+            if (samplePersonFromBackend.isPresent()) {
+                populateForm(samplePersonFromBackend.get());
+            } else {
+                Notification.show(
+                        String.format("The requested samplePerson was not found, ID = %d", samplePersonId.get()), 3000,
+                        Notification.Position.BOTTOM_START);
+                // when a row is selected but the data is no longer available,
+                // refresh grid
+                refreshGrid();
+                event.forwardTo(AboutView.class);
+            }
+        }
     }
 
 }
