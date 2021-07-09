@@ -3,3 +3,9 @@
 vaadin/_site/
 .idea
 node_modules/
+/target/frontend/generated-flow-imports.js
+/package.json
+/package-lock.json
+/parent.iml
+/webpack.config.js
+/webpack.generated.js
