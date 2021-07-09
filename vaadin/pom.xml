@@ -11,6 +11,7 @@
     <properties>
         <java.version>11</java.version>
         <vaadin.version>14.6.1</vaadin.version>
+        <sonar.projectKey>frido_petrzalka-vaadin</sonar.projectKey>
     </properties>
 
     <parent>
