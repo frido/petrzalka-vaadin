@@ -1,8 +1,12 @@
 package com.example.application.views.about;
 
-import com.example.springboot.page.budget.*;
-import com.example.springboot.page.project.Program;
-import com.example.springboot.page.project.Project;
+import com.example.application.old.page.budget.BudgetDto;
+import com.example.application.old.page.budget.BudgetProject;
+import com.example.application.old.page.budget.BudgetService;
+import com.example.application.old.page.budget.BudgetStatus;
+import com.example.application.old.page.project.Program;
+import com.example.application.services.BudgetService2;
+import com.example.application.views.main.MainView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasStyle;
 import com.vaadin.flow.component.UI;
@@ -20,15 +24,13 @@ import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.ValidationException;
-import com.vaadin.flow.data.provider.DataProvider;
-import com.vaadin.flow.data.renderer.Renderer;
 import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
-import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.PageTitle;
-import com.example.application.views.main.MainView;
+import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.vaadin.artur.helpers.CrudServiceDataProvider;
 
 import java.util.Optional;
 import java.util.function.Function;
@@ -41,6 +43,7 @@ public class AboutView extends Div implements BeforeEnterObserver {
     private final String SAMPLEPERSON_EDIT_ROUTE_TEMPLATE = "about/%d/edit";
 
     private final BudgetService budgetService;
+    private final BudgetService2 samplePersonService;
     private Grid<BudgetDto> grid = new Grid<>(BudgetDto.class, false);
     private BeanValidationBinder<BudgetDto> binder;
     private Button cancel = new Button("Cancel");
@@ -59,8 +62,9 @@ public class AboutView extends Div implements BeforeEnterObserver {
 
     private BudgetDto samplePerson;
 
-    public AboutView(@Autowired BudgetService budgetService) {
+    public AboutView(@Autowired BudgetService budgetService, @Autowired BudgetService2 samplePersonService) {
         this.budgetService = budgetService;
+        this.samplePersonService = samplePersonService;
 
         setSizeFull();
         SplitLayout splitLayout = new SplitLayout();
@@ -84,8 +88,9 @@ public class AboutView extends Div implements BeforeEnterObserver {
         grid.addColumn("useAmountReal").setAutoWidth(true);
         grid.addColumn("showComment").setAutoWidth(true);
 
-//        grid.setDataProvider(new CrudServiceDataProvider<>(samplePersonService));
-        grid.setDataProvider(DataProvider.ofCollection(budgetService.findAllBudgeets()));
+        // TODO: Service pouziva Budget, Grid zasa BudgetDto - data provider ktory to premapuje
+        grid.setDataProvider(new CrudServiceDataProvider<>(samplePersonService));
+//        grid.setDataProvider(DataProvider.ofCollection(budgetService.findAllBudgeets()));
 
         grid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
         grid.setHeightFull();
