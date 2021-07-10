@@ -32,7 +32,7 @@ public class AppConfig {
         return builder.build();
     }
 
-    @Bean
+    @Bean(name = "transactionManager")
     public JpaTransactionManager jpaTransactionManager() {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(entityManagerFactoryBean().getObject());

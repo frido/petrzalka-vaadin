@@ -1,9 +1,6 @@
 package com.example.application.views.about;
 
-import com.example.application.old.page.budget.BudgetDto;
-import com.example.application.old.page.budget.BudgetProject;
-import com.example.application.old.page.budget.BudgetService;
-import com.example.application.old.page.budget.BudgetStatus;
+import com.example.application.old.page.budget.*;
 import com.example.application.old.page.project.Program;
 import com.example.application.services.BudgetService2;
 import com.example.application.views.main.MainView;
@@ -44,7 +41,7 @@ public class AboutView extends Div implements BeforeEnterObserver {
 
     private final BudgetService budgetService;
     private final BudgetService2 samplePersonService;
-    private Grid<BudgetDto> grid = new Grid<>(BudgetDto.class, false);
+    private Grid<Budget> grid = new Grid<>(Budget.class, false);
     private BeanValidationBinder<BudgetDto> binder;
     private Button cancel = new Button("Cancel");
     private Button save = new Button("Save");
@@ -84,7 +81,7 @@ public class AboutView extends Div implements BeforeEnterObserver {
         grid.addColumn("amountReal").setAutoWidth(true);
         grid.addColumn("comment").setAutoWidth(true);
         grid.addColumn("status").setAutoWidth(true);
-        grid.addColumn(this.generalRenderer(BudgetDto::getProject, BudgetProject::getTitle)).setAutoWidth(true);
+        grid.addColumn(this.generalRenderer(Budget::getProject, BudgetProject::getTitle)).setAutoWidth(true);
         grid.addColumn("useAmountReal").setAutoWidth(true);
         grid.addColumn("showComment").setAutoWidth(true);
 
