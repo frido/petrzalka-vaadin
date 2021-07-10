@@ -15,6 +15,7 @@ import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
@@ -22,8 +23,6 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.function.ValueProvider;
-import com.vaadin.flow.router.BeforeEnterEvent;
-import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,9 +31,9 @@ import org.vaadin.artur.helpers.CrudServiceDataProvider;
 import java.util.Optional;
 import java.util.function.Function;
 
-//@PageTitle("About")
-//@Route(value = "about/:samplePersonID?/:action?(edit)", layout = MainView.class)
-public class AboutView extends Div /*implements BeforeEnterObserver*/ {
+@PageTitle("About")
+@Route(value = "about/:samplePersonID?/:action?(edit)", layout = MainView.class)
+public class AboutViewMain extends Div /*implements BeforeEnterObserver*/ {
 
     private final String SAMPLEPERSON_ID = "samplePersonID";
     private final String SAMPLEPERSON_EDIT_ROUTE_TEMPLATE = "about/%d/edit";
@@ -59,92 +58,13 @@ public class AboutView extends Div /*implements BeforeEnterObserver*/ {
 
     private BudgetDto samplePerson;
 
-    public AboutView(@Autowired BudgetService budgetService, @Autowired BudgetService2 samplePersonService) {
+    public AboutViewMain(@Autowired BudgetService budgetService, @Autowired BudgetService2 samplePersonService) {
         this.budgetService = budgetService;
         this.samplePersonService = samplePersonService;
 
         setSizeFull();
-        SplitLayout splitLayout = new SplitLayout();
-        splitLayout.setSizeFull();
-
-        createGridLayout(splitLayout);
-        createEditorLayout(splitLayout);
-
-        add(splitLayout);
-
-        grid.addColumn("id").setAutoWidth(true);
-        grid.addColumn("title").setWidth("200px");
-        grid.addColumn("year").setAutoWidth(true);
-        grid.addColumn("program").setAutoWidth(true);
-        grid.addColumn("amountOriginal").setAutoWidth(true);
-        grid.addColumn("amountUpdated").setAutoWidth(true);
-        grid.addColumn("amountReal").setAutoWidth(true);
-        grid.addColumn("comment").setAutoWidth(true);
-        grid.addColumn("status").setAutoWidth(true);
-        grid.addColumn(this.generalRenderer(Budget::getProject, BudgetProject::getTitle)).setAutoWidth(true);
-        grid.addColumn("useAmountReal").setAutoWidth(true);
-        grid.addColumn("showComment").setAutoWidth(true);
-
-        // TODO: Service pouziva Budget, Grid zasa BudgetDto - data provider ktory to premapuje
-        grid.setDataProvider(new CrudServiceDataProvider<>(samplePersonService));
-//        grid.setDataProvider(DataProvider.ofCollection(budgetService.findAllBudgeets()));
-
-        grid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
-        grid.setHeightFull();
-
-        // when a row is selected or deselected, populate form
-        grid.asSingleSelect().addValueChangeListener(event -> {
-            if (event.getValue() != null) {
-//                UI.getCurrent().navigate(String.format(SAMPLEPERSON_EDIT_ROUTE_TEMPLATE, event.getValue().getId()));
-                selectItem(event.getValue().getId());
-            } else {
-                clearForm();
-//                UI.getCurrent().navigate(AboutView.class);
-            }
-        });
-
-        // Configure Form
-        binder = new BeanValidationBinder<>(BudgetDto.class);
-
-        // Bind fields. This where you'd define e.g. validation rules
-//        binder.bindInstanceFields(this);
-        binder.forField(title).bind("title");
-        binder.forField(year).withConverter(new IntegerConverter()).bind("year");
-        binder.forField(program).bind("program");
-        binder.forField(amountOriginal).withConverter(new DecimalConverter()).bind("amountOriginal");
-        binder.forField(amountUpdated).withConverter(new DecimalConverter()).bind("amountUpdated");
-        binder.forField(amountReal).withConverter(new DecimalConverter()).bind("amountReal");
-        binder.forField(comment).bind("comment");
-        binder.forField(status).bind("status");
-        binder.forField(project).bind("project");
-        binder.forField(useAmountReal).bind("useAmountReal");
-        binder.forField(showComment).bind("showComment");
-
-        cancel.addClickListener(e -> {
-            clearForm();
-            refreshGrid();
-        });
-
-        save.addClickListener(e -> {
-            try {
-                if (this.samplePerson == null) {
-                    this.samplePerson = new BudgetDto();
-                }
-                System.out.println("1");
-                System.out.println(this.samplePerson);
-                binder.writeBean(this.samplePerson);
-                System.out.println("2");
-                System.out.println(this.samplePerson);
-
-                budgetService.update(this.samplePerson);
-                clearForm();
-                refreshGrid();
-                Notification.show("SamplePerson details stored.");
-                UI.getCurrent().navigate(AboutView.class);
-            } catch (ValidationException validationException) {
-                Notification.show("An exception happened while trying to store the samplePerson details.");
-            }
-        });
+        add(new Label("TEST"));
+        add(new AboutView(budgetService, samplePersonService));
     }
 
     private <S, T>ValueProvider<S, String> generalRenderer(Function<S, T> bean, Function<T, String> str) {

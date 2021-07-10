@@ -2,6 +2,7 @@ package com.example.application.views.main;
 
 import java.util.Optional;
 
+import com.example.application.views.about.AboutViewMain;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.applayout.AppLayout;
@@ -76,7 +77,7 @@ public class MainView extends AppLayout {
     }
 
     private static Tab[] getAvailableTabs() {
-        return new Tab[]{createTab("Hello World", HelloWorldView.class), createTab("About", AboutView.class),
+        return new Tab[]{createTab("Hello World", HelloWorldView.class), createTab("About", AboutViewMain.class),
                 createTab("Card List", CardListView.class), createTab("Person Form", PersonFormView.class)};
     }
 
