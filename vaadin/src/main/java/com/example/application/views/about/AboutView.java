@@ -34,7 +34,7 @@ import java.util.function.Function;
 
 @PageTitle("About")
 @Route(value = "about/:samplePersonID?/:action?(edit)", layout = MainView.class)
-public class AboutView extends Div implements BeforeEnterObserver {
+public class AboutView extends Div /*implements BeforeEnterObserver*/ {
 
     private final String SAMPLEPERSON_ID = "samplePersonID";
     private final String SAMPLEPERSON_EDIT_ROUTE_TEMPLATE = "about/%d/edit";
@@ -95,10 +95,11 @@ public class AboutView extends Div implements BeforeEnterObserver {
         // when a row is selected or deselected, populate form
         grid.asSingleSelect().addValueChangeListener(event -> {
             if (event.getValue() != null) {
-                UI.getCurrent().navigate(String.format(SAMPLEPERSON_EDIT_ROUTE_TEMPLATE, event.getValue().getId()));
+//                UI.getCurrent().navigate(String.format(SAMPLEPERSON_EDIT_ROUTE_TEMPLATE, event.getValue().getId()));
+                selectItem(event.getValue().getId());
             } else {
                 clearForm();
-                UI.getCurrent().navigate(AboutView.class);
+//                UI.getCurrent().navigate(AboutView.class);
             }
         });
 
@@ -223,22 +224,26 @@ public class AboutView extends Div implements BeforeEnterObserver {
         editorLayoutDiv.add(buttonLayout);
     }
 
-    @Override
-    public void beforeEnter(BeforeEnterEvent event) {
-        Optional<Integer> samplePersonId = event.getRouteParameters().getInteger(SAMPLEPERSON_ID);
-        if (samplePersonId.isPresent()) {
-            Optional<BudgetDto> samplePersonFromBackend = budgetService.get(samplePersonId.get());
-            if (samplePersonFromBackend.isPresent()) {
-                populateForm(samplePersonFromBackend.get());
-            } else {
-                Notification.show(
-                        String.format("The requested samplePerson was not found, ID = %d", samplePersonId.get()), 3000,
-                        Notification.Position.BOTTOM_START);
-                // when a row is selected but the data is no longer available,
-                // refresh grid
-                refreshGrid();
-                event.forwardTo(AboutView.class);
-            }
+//    @Override
+//    public void beforeEnter(BeforeEnterEvent event) {
+//        Optional<Integer> samplePersonId = event.getRouteParameters().getInteger(SAMPLEPERSON_ID);
+//        if (samplePersonId.isPresent()) {
+//            selectItem(samplePersonId.get());
+//        }
+//    }
+
+    public void selectItem(int id) {
+        Optional<BudgetDto> samplePersonFromBackend = budgetService.get(id);
+        if (samplePersonFromBackend.isPresent()) {
+            populateForm(samplePersonFromBackend.get());
+        } else {
+            Notification.show(
+                    String.format("The requested samplePerson was not found, ID = %d", id), 3000,
+                    Notification.Position.BOTTOM_START);
+            // when a row is selected but the data is no longer available,
+            // refresh grid
+            refreshGrid();
+//            event.forwardTo(AboutView.class);
         }
     }
 
