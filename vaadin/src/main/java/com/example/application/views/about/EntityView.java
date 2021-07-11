@@ -15,7 +15,6 @@ import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
@@ -23,6 +22,8 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.function.ValueProvider;
+import com.vaadin.flow.router.BeforeEnterEvent;
+import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,41 +32,105 @@ import org.vaadin.artur.helpers.CrudServiceDataProvider;
 import java.util.Optional;
 import java.util.function.Function;
 
-@PageTitle("About")
-@Route(value = "about/:samplePersonID?/:action?(edit)", layout = MainView.class)
-public class AboutViewMain extends Div /*implements BeforeEnterObserver*/ {
-
-    private final String SAMPLEPERSON_ID = "samplePersonID";
-    private final String SAMPLEPERSON_EDIT_ROUTE_TEMPLATE = "about/%d/edit";
+//@PageTitle("About")
+//@Route(value = "about/:samplePersonID?/:action?(edit)", layout = MainView.class)
+public class EntityView extends Div /*implements BeforeEnterObserver*/ {
 
     private final BudgetService budgetService;
     private final BudgetService2 samplePersonService;
     private Grid<Budget> grid = new Grid<>(Budget.class, false);
-    private BeanValidationBinder<BudgetDto> binder;
+    // private BeanValidationBinder<Budget> binder;
     private Button cancel = new Button("Cancel");
     private Button save = new Button("Save");
-    private TextField title;
-    private TextField year;
-    private ComboBox<Program> program;
-    private TextField amountOriginal;
-    private TextField amountUpdated;
-    private TextField amountReal;
-    private TextField comment;
-    private ComboBox<BudgetStatus> status;
-    private ComboBox<BudgetProject> project;
-    private Checkbox useAmountReal;
-    private Checkbox showComment;
+    // private TextField title;
+    // private TextField year;
+    // private ComboBox<Program> program;
+    // private TextField amountOriginal;
+    // private TextField amountUpdated;
+    // private TextField amountReal;
+    // private TextField comment;
+    // private ComboBox<BudgetStatus> status;
+    // private ComboBox<BudgetProject> project;
+    // private Checkbox useAmountReal;
+    // private Checkbox showComment;
+    GridConfig<Budget> conf;
 
-    private BudgetDto samplePerson;
+    private Budget samplePerson;
 
-    public AboutViewMain(@Autowired BudgetService budgetService, @Autowired BudgetService2 samplePersonService) {
+    public EntityView(BudgetService budgetService, BudgetService2 samplePersonService, GridConfig<Budget> conf) {
         this.budgetService = budgetService;
         this.samplePersonService = samplePersonService;
+        this.conf = conf;
 
         setSizeFull();
-        add(new Label("TEST"));
-        // add(new AboutView(budgetService, samplePersonService));
-        add(new EntityView(budgetService, samplePersonService, new GridConfig<>(Budget.class)));
+        SplitLayout splitLayout = new SplitLayout();
+        splitLayout.setSizeFull();
+
+        createGridLayout(splitLayout);
+        createEditorLayout(splitLayout);
+
+        add(splitLayout);
+
+        conf.getProperties().forEach(property -> 
+            grid.addColumn(property.getValueProvider())
+                .setHeader(property.getName())
+                .setAutoWidth(true)
+            );
+
+        grid.setDataProvider(new CrudServiceDataProvider<>(samplePersonService)); // TODO generalize to all entities
+        grid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
+        grid.setHeightFull();
+        grid.asSingleSelect().addValueChangeListener(event -> {
+            if (event.getValue() != null) {
+                selectItem(event.getValue().getId());
+            } else {
+                clearForm();
+            }
+        });
+
+        // Configure Form
+//         binder = new BeanValidationBinder<>(Budget.class);
+
+//         // Bind fields. This where you'd define e.g. validation rules
+// //        binder.bindInstanceFields(this);
+//         // binder.forField(title).bind("title");
+//         // binder.forField(year).withConverter(new IntegerConverter()).bind("year");
+//         // binder.forField(program).bind("program");
+//         // binder.forField(amountOriginal).withConverter(new DecimalConverter()).bind("amountOriginal");
+//         // binder.forField(amountUpdated).withConverter(new DecimalConverter()).bind("amountUpdated");
+//         // binder.forField(amountReal).withConverter(new DecimalConverter()).bind("amountReal");
+//         // binder.forField(comment).bind("comment");
+//         // binder.forField(status).bind("status");
+//         // binder.forField(project).bind("project");
+//         // binder.forField(useAmountReal).bind("useAmountReal");
+//         // binder.forField(showComment).bind("showComment");
+//         conf.getProperties().forEach(property -> property.getField(binder));
+
+        cancel.addClickListener(e -> {
+            clearForm();
+            refreshGrid();
+        });
+
+        save.addClickListener(e -> {
+            try {
+                if (this.samplePerson == null) {
+                    this.samplePerson = new Budget();
+                }
+                System.out.println("1");
+                System.out.println(this.samplePerson);
+                conf.getBinder().writeBean(this.samplePerson);
+                System.out.println("2");
+                System.out.println(this.samplePerson);
+
+                budgetService.update2(this.samplePerson);
+                clearForm();
+                refreshGrid();
+                Notification.show("SamplePerson details stored.");
+                UI.getCurrent().navigate(AboutView.class);
+            } catch (ValidationException validationException) {
+                Notification.show("An exception happened while trying to store the samplePerson details.");
+            }
+        });
     }
 
     private <S, T>ValueProvider<S, String> generalRenderer(Function<S, T> bean, Function<T, String> str) {
@@ -82,9 +147,9 @@ public class AboutViewMain extends Div /*implements BeforeEnterObserver*/ {
     }
 
 
-    private void populateForm(BudgetDto value) {
+    private void populateForm(Budget value) {
         this.samplePerson = value;
-        binder.readBean(this.samplePerson);
+        conf.getBinder().readBean(this.samplePerson);
     }
 
     private void createEditorLayout(SplitLayout splitLayout) {
@@ -97,29 +162,12 @@ public class AboutViewMain extends Div /*implements BeforeEnterObserver*/ {
         editorLayoutDiv.add(editorDiv);
 
         FormLayout formLayout = new FormLayout();
-        title = new TextField("title");
-        year = new TextField("year");
-        program = new ComboBox<>("program");
-        program.setItems(Program.values());
-        amountOriginal = new TextField("amountOriginal");
-        amountUpdated = new TextField("amountUpdated");
-        amountReal = new TextField("amountReal");
-        comment = new TextField("comment");
-        status = new ComboBox<>("status");
-        status.setItems(BudgetStatus.values());
-        project = new ComboBox<>("project");
-        project.setItems(budgetService.findAll(BudgetProject.class)); //TODO: lazy
-        project.setItemLabelGenerator(BudgetProject::getTitle);
-        useAmountReal = new Checkbox("useAmountReal");
-        showComment = new Checkbox("showComment");
-        Component[] fields = new Component[]{title, year, program, amountOriginal,
-                amountUpdated, amountReal, comment, status, project, useAmountReal,
-                showComment};
-
-        for (Component field : fields) {
+        
+        for (Component field : conf.getComponents()) {
             ((HasStyle) field).addClassName("full-width");
         }
-        formLayout.add(fields);
+        conf.getComponents().forEach(formLayout::add);
+        // formLayout.add();
         editorDiv.add(formLayout);
         createButtonLayout(editorLayoutDiv);
 
@@ -154,7 +202,7 @@ public class AboutViewMain extends Div /*implements BeforeEnterObserver*/ {
 //    }
 
     public void selectItem(int id) {
-        Optional<BudgetDto> samplePersonFromBackend = budgetService.get(id);
+        Optional<Budget> samplePersonFromBackend = budgetService.get2(id);
         if (samplePersonFromBackend.isPresent()) {
             populateForm(samplePersonFromBackend.get());
         } else {

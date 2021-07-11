@@ -74,6 +74,10 @@ public class BudgetService {
         return Optional.of(em.find(Budget.class, id)).map(e -> modelMapper.map(e, BudgetDto.class));
     }
 
+    public Optional<Budget> get2(Integer id) {
+        return Optional.ofNullable(em.find(Budget.class, id));
+    }
+
     @Transactional // TODO naco, preco?
     public void update(BudgetDto budget) {
         ModelMapper modelMapper = new ModelMapper();
@@ -81,6 +85,12 @@ public class BudgetService {
         Budget entity =  modelMapper.map(budget, Budget.class);
         System.out.println("3");
         System.out.println(entity);
+        em.merge(entity); // TODO: version, optimistic lock
+        em.flush();
+    }
+
+    @Transactional // TODO naco, preco?
+    public void update2(Budget entity) {
         em.merge(entity); // TODO: version, optimistic lock
         em.flush();
     }
