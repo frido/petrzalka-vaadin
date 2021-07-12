@@ -1,5 +1,7 @@
 package com.example.application.views.about;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
 
 import com.example.application.old.page.budget.Budget;
@@ -17,19 +19,20 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.data.binder.ValidationException;
 
-public class EntityView extends Div {
+public class EntityView<T> extends Div {
 
-    private Grid<Budget> grid = new Grid<>(Budget.class, false);
+    private Grid<T> grid;
     private Button cancel = new Button("Cancel");
     private Button save = new Button("Save");
-    GridConfig<Budget> conf;
-    EntityService<Budget, Integer> entityService;
+    GridConfig<T> conf;
+    EntityService<T, Integer> entityService;
 
-    private Budget samplePerson;
+    private T samplePerson;
 
-    public EntityView(EntityService<Budget, Integer> entityService, GridConfig<Budget> conf) {
+    public EntityView(EntityService<T, Integer> entityService, GridConfig<T> conf) {
         this.entityService = entityService;
         this.conf = conf;
+        grid = new Grid<T>(conf.getClazz(), false);
 
         setSizeFull();
         SplitLayout splitLayout = new SplitLayout();
@@ -51,7 +54,7 @@ public class EntityView extends Div {
         grid.setHeightFull();
         grid.asSingleSelect().addValueChangeListener(event -> {
             if (event.getValue() != null) {
-                selectItem(event.getValue().getId());
+                selectItem(event.getValue());
             } else {
                 clearForm();
             }
@@ -65,7 +68,10 @@ public class EntityView extends Div {
         save.addClickListener(e -> {
             try {
                 if (this.samplePerson == null) {
-                    this.samplePerson = new Budget();
+                    Class<T> clazz = conf.getClazz();
+                    Constructor<T> ctor = clazz.getConstructor();
+                    T object = ctor.newInstance();
+                    this.samplePerson = object;
                 }
                 System.out.println("1");
                 System.out.println(this.samplePerson);
@@ -78,7 +84,7 @@ public class EntityView extends Div {
                 refreshGrid();
                 Notification.show("SamplePerson details stored.");
                 UI.getCurrent().navigate(AboutView.class);
-            } catch (ValidationException validationException) {
+            } catch (ValidationException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException validationException) {
                 Notification.show("An exception happened while trying to store the samplePerson details.");
             }
         });
@@ -94,7 +100,7 @@ public class EntityView extends Div {
     }
 
 
-    private void populateForm(Budget value) {
+    private void populateForm(T value) {
         this.samplePerson = value;
         conf.getBinder().readBean(this.samplePerson);
     }
@@ -140,16 +146,18 @@ public class EntityView extends Div {
         editorLayoutDiv.add(buttonLayout);
     }
 
-    public void selectItem(int id) {
-        Optional<Budget> samplePersonFromBackend = entityService.get(id);
-        if (samplePersonFromBackend.isPresent()) {
-            populateForm(samplePersonFromBackend.get());
-        } else {
-            Notification.show(
-                    String.format("The requested samplePerson was not found, ID = %d", id), 3000,
-                    Notification.Position.BOTTOM_START);
-            refreshGrid();
-        }
+    public void selectItem(T item) {
+        populateForm(item);
+        // refreshGrid();
+        // Optional<T> samplePersonFromBackend = entityService.get(id);
+        // if (samplePersonFromBackend.isPresent()) {
+        //     populateForm(samplePersonFromBackend.get());
+        // } else {
+        //     Notification.show(
+        //             String.format("The requested samplePerson was not found, ID = %d", id), 3000,
+        //             Notification.Position.BOTTOM_START);
+        //     refreshGrid();
+        // }
     }
 
 }

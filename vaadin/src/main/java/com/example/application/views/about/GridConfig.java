@@ -32,6 +32,10 @@ public class GridConfig<T> {
         }
     }
 
+    public Class<T> getClazz() {
+        return clazz;
+    }
+
     private void addField(PropertyDescriptor  pd) {
         properties.add(new FieldConfig<T>(pd, binder));
     }
