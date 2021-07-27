@@ -5,12 +5,17 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import javax.transaction.Transactional;
+import javax.transaction.UserTransaction;
 
+import com.example.application.old.page.budget.Budget;
+import com.example.application.services.BudgetService3;
 import com.vaadin.flow.data.provider.Query;
 import com.vaadin.flow.data.provider.QuerySortOrder;
 
@@ -22,12 +27,13 @@ import org.vaadin.artur.spring.dataprovider.FilterablePageableDataProvider;
 public class EntityService<T, F> extends FilterablePageableDataProvider<T, F>{
 
     private EntityManager em;
-
     Class<T> clazz;
+    BudgetService3 service;
 
-    public EntityService(EntityManager em, Class<T> clazz) {
+    public EntityService(BudgetService3 service, EntityManager em, Class<T> clazz) {
         this.em = em;
         this.clazz = clazz;
+        this.service = service;
     }
 
     @Override
@@ -56,6 +62,11 @@ public class EntityService<T, F> extends FilterablePageableDataProvider<T, F>{
 
     public Optional<T> get(F id) {
         return Optional.ofNullable(em.find(clazz, id));
+    }
+
+    // @Transactional // TODO: nerozumiem na co to tu je
+    public T save(T entity) {
+        return (T) service.save((Budget) entity);
     }
 
     

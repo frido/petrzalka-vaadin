@@ -79,7 +79,7 @@ public class EntityView<T> extends Div {
                 System.out.println("2");
                 System.out.println(this.samplePerson);
 
-                // budgetService.update2(this.samplePerson); TODO: save entity
+                entityService.save(this.samplePerson);
                 clearForm();
                 refreshGrid();
                 Notification.show("SamplePerson details stored.");
@@ -131,6 +131,7 @@ public class EntityView<T> extends Div {
         Div wrapper = new Div();
         wrapper.setId("grid-wrapper");
         wrapper.setWidthFull();
+        wrapper.setHeightFull();
 
         splitLayout.addToPrimary(wrapper);
         wrapper.add(grid);
