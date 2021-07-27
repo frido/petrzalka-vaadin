@@ -21,8 +21,8 @@ public class BudgetService3 {
     }
 
     @Transactional // TODO: nerozumiem na co to tu je
-    public Budget save(Budget entity) {
-        Budget response = em.merge(entity);
+    public <T> T save(T entity) {
+        T response = em.merge(entity);
         return response;
     }
 }

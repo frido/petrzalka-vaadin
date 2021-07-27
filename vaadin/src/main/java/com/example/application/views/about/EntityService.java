@@ -64,9 +64,8 @@ public class EntityService<T, F> extends FilterablePageableDataProvider<T, F>{
         return Optional.ofNullable(em.find(clazz, id));
     }
 
-    // @Transactional // TODO: nerozumiem na co to tu je
     public T save(T entity) {
-        return (T) service.save((Budget) entity);
+        return service.save(entity);
     }
 
     
