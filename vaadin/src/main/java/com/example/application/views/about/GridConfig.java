@@ -12,6 +12,7 @@ import java.util.stream.Stream;
 
 import com.example.application.old.page.budget.Budget;
 import com.example.application.old.page.budget.BudgetDto;
+import com.example.application.services.BudgetService3;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 
@@ -19,13 +20,16 @@ public class GridConfig<T> {
     private Class<T> clazz;
     private List<FieldConfig<T>> properties = new ArrayList();
     private BeanValidationBinder<T> binder;
+    BudgetService3 service;
     
-    GridConfig(Class<T> clazz) {
+    GridConfig(Class<T> clazz, BudgetService3 service) {
         this.clazz = clazz;
+        this.service = service;
         binder = new BeanValidationBinder<>(clazz);
         try {
             Arrays.stream(Introspector.getBeanInfo(clazz).getPropertyDescriptors())
                 .filter(x -> !x.getDisplayName().equals("class"))
+                .filter(x -> !x.getDisplayName().equals("projectId"))
                 .forEach(this::addField);
         } catch (IntrospectionException e) {
             e.printStackTrace();
@@ -37,7 +41,7 @@ public class GridConfig<T> {
     }
 
     private void addField(PropertyDescriptor  pd) {
-        properties.add(new FieldConfig<T>(pd, binder));
+        properties.add(new FieldConfig<T>(pd, binder, service));
     }
 
     public List<Component> getComponents() {
@@ -53,6 +57,6 @@ public class GridConfig<T> {
     }
 
     public static void main(String[] args) {
-        GridConfig<Budget> c = new GridConfig<>(Budget.class);
+        GridConfig<Budget> c = new GridConfig<>(Budget.class, null);
     }
 }

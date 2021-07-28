@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name = "budget")
-public class Budget {
+public class Budget implements Comboboxable {
     @Id
     private int id;
     private String title;
@@ -42,6 +42,7 @@ public class Budget {
         this.id = id;
     }
 
+    @Override
     public String getTitle() {
         return title;
     }

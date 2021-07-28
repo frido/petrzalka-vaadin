@@ -21,6 +21,6 @@ public class AboutViewMain extends Div /*implements BeforeEnterObserver*/ {
     public AboutViewMain(@Autowired BudgetService3 service) {
         setSizeFull();
         add(new Label("TEST"));
-        add(new EntityView<Budget>(new EntityService<Budget,Integer>(service, service.getEm(), Budget.class), new GridConfig<>(Budget.class)));
+        add(new EntityView<Budget>(new EntityService<Budget,Integer>(service, service.getEm(), Budget.class), new GridConfig<>(Budget.class, service)));
     }
 }

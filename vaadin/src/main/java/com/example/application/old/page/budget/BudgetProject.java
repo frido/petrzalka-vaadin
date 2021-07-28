@@ -77,4 +77,10 @@ public class BudgetProject {
                 .sorted(Comparator.comparing(Budget::getAmount).reversed())
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public String toString() {
+        return getTitle();
+    }
+    
 }

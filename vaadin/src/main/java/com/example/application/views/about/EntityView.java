@@ -36,7 +36,7 @@ public class EntityView<T> extends Div {
 
         setSizeFull();
         SplitLayout splitLayout = new SplitLayout();
-        splitLayout.setSizeFull();
+        // splitLayout.setSizeFull();
 
         createGridLayout(splitLayout);
         createEditorLayout(splitLayout);
@@ -130,8 +130,8 @@ public class EntityView<T> extends Div {
     private void createGridLayout(SplitLayout splitLayout) {
         Div wrapper = new Div();
         wrapper.setId("grid-wrapper");
-        wrapper.setWidthFull();
-        wrapper.setHeightFull();
+        // wrapper.setWidthFull();
+        // wrapper.setHeightFull();
 
         splitLayout.addToPrimary(wrapper);
         wrapper.add(grid);

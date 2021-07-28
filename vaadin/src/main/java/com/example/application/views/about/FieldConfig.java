@@ -10,6 +10,10 @@ import java.util.List;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import javax.persistence.Entity;
+
+import com.example.application.old.page.budget.Comboboxable;
+import com.example.application.services.BudgetService3;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.checkbox.Checkbox;
@@ -23,9 +27,11 @@ public class FieldConfig<T> {
 
     private PropertyDescriptor property;
     private Component component;
+    private BudgetService3 service;
 
-    public FieldConfig(PropertyDescriptor pd, BeanValidationBinder<T> binder) {
+    public FieldConfig(PropertyDescriptor pd, BeanValidationBinder<T> binder, BudgetService3 service) {
         this.property = pd;
+        this.service = service;
         this.component = getField(binder);
     }
     
@@ -51,6 +57,9 @@ public class FieldConfig<T> {
     }
 
     private <E> Component getField(BeanValidationBinder<T> binder) {
+        if(property.getWriteMethod() == null) {
+            return new TextField();
+        }
         if(property.getPropertyType().isEnum()) {
             Class<E> type = (Class<E>) property.getPropertyType();
             ComboBox<E> program = new ComboBox<>(getName());
@@ -74,6 +83,14 @@ public class FieldConfig<T> {
             Checkbox com = new Checkbox(getName());
             binder.forField(com).bind(getName());
             return com;
+        } else if (property.getPropertyType().isAnnotationPresent(Entity.class)) {
+            Class<E> type = (Class<E>) property.getPropertyType();
+            ComboBox<E> program = new ComboBox<>(getName());
+            List<E> list = service.findAll(type).stream().map(x -> type.cast(x)).collect(Collectors.toList());
+            program.setItems(list);
+            // program.setItemLabelGenerator(x -> ((Comboboxable)x).getTitle());
+            binder.forField(program).bind(getName());
+            return program;
         }
         return new TextField();
     }

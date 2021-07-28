@@ -37,12 +37,14 @@ public class EntityService<T, F> extends FilterablePageableDataProvider<T, F>{
     }
 
     @Override
-    protected Page<T> fetchFromBackEnd(Query<T, F> arg0, Pageable arg1) {
+    protected Page<T> fetchFromBackEnd(Query<T, F> arg0, Pageable pagable) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<T> cq = cb.createQuery(clazz);
         Root<T> rootEntry = cq.from(clazz);
         CriteriaQuery<T> all = cq.select(rootEntry);
         TypedQuery<T> allQuery = em.createQuery(all);
+        allQuery.setMaxResults(pagable.getPageSize());
+        allQuery.setFirstResult((int) pagable.getOffset());
         return new PageImpl<>(allQuery.getResultList());
     }
 
