@@ -3,6 +3,9 @@ package com.example.application.views.main;
 import java.util.Optional;
 
 import com.example.application.views.about.AboutViewMain;
+import com.example.application.views.cardlist.CardListView;
+import com.example.application.views.helloworld.HelloWorldView;
+import com.example.application.views.personform.PersonFormView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.applayout.AppLayout;
@@ -18,13 +21,6 @@ import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.theme.Theme;
-import com.vaadin.flow.router.Route;
-import com.vaadin.flow.router.PageTitle;
-import com.example.application.views.main.MainView;
-import com.example.application.views.helloworld.HelloWorldView;
-import com.example.application.views.about.AboutView;
-import com.example.application.views.cardlist.CardListView;
-import com.example.application.views.personform.PersonFormView;
 
 /**
  * The main view is a top-level placeholder for other views.

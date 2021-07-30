@@ -2,9 +2,7 @@ package com.example.application.views.about;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Optional;
 
-import com.example.application.old.page.budget.Budget;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasStyle;
 import com.vaadin.flow.component.UI;
@@ -24,19 +22,17 @@ public class EntityView<T> extends Div {
     private Grid<T> grid;
     private Button cancel = new Button("Cancel");
     private Button save = new Button("Save");
-    GridConfig<T> conf;
+    private transient GridConfig<T> conf;
     EntityService<T, Integer> entityService;
 
-    private T samplePerson;
+    private transient T selectedEntity;
 
     public EntityView(EntityService<T, Integer> entityService, GridConfig<T> conf) {
         this.entityService = entityService;
         this.conf = conf;
-        grid = new Grid<T>(conf.getClazz(), false);
+        grid = new Grid<>(conf.getClazz(), false);
 
-        setSizeFull();
         SplitLayout splitLayout = new SplitLayout();
-        // splitLayout.setSizeFull();
 
         createGridLayout(splitLayout);
         createEditorLayout(splitLayout);
@@ -67,23 +63,20 @@ public class EntityView<T> extends Div {
 
         save.addClickListener(e -> {
             try {
-                if (this.samplePerson == null) {
+                if (this.selectedEntity == null) {
                     Class<T> clazz = conf.getClazz();
                     Constructor<T> ctor = clazz.getConstructor();
                     T object = ctor.newInstance();
-                    this.samplePerson = object;
+                    this.selectedEntity = object;
                 }
-                System.out.println("1");
-                System.out.println(this.samplePerson);
-                conf.getBinder().writeBean(this.samplePerson);
-                System.out.println("2");
-                System.out.println(this.samplePerson);
 
-                entityService.save(this.samplePerson);
+                conf.getBinder().writeBean(this.selectedEntity);
+
+                entityService.save(this.selectedEntity);
                 clearForm();
                 refreshGrid();
                 Notification.show("SamplePerson details stored.");
-                UI.getCurrent().navigate(AboutView.class);
+                UI.getCurrent().navigate(AboutViewMain.class);
             } catch (ValidationException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException validationException) {
                 Notification.show("An exception happened while trying to store the samplePerson details.");
             }
@@ -101,8 +94,8 @@ public class EntityView<T> extends Div {
 
 
     private void populateForm(T value) {
-        this.samplePerson = value;
-        conf.getBinder().readBean(this.samplePerson);
+        this.selectedEntity = value;
+        conf.getBinder().readBean(this.selectedEntity);
     }
 
     private void createEditorLayout(SplitLayout splitLayout) {
@@ -130,8 +123,6 @@ public class EntityView<T> extends Div {
     private void createGridLayout(SplitLayout splitLayout) {
         Div wrapper = new Div();
         wrapper.setId("grid-wrapper");
-        // wrapper.setWidthFull();
-        // wrapper.setHeightFull();
 
         splitLayout.addToPrimary(wrapper);
         wrapper.add(grid);
@@ -149,16 +140,6 @@ public class EntityView<T> extends Div {
 
     public void selectItem(T item) {
         populateForm(item);
-        // refreshGrid();
-        // Optional<T> samplePersonFromBackend = entityService.get(id);
-        // if (samplePersonFromBackend.isPresent()) {
-        //     populateForm(samplePersonFromBackend.get());
-        // } else {
-        //     Notification.show(
-        //             String.format("The requested samplePerson was not found, ID = %d", id), 3000,
-        //             Notification.Position.BOTTOM_START);
-        //     refreshGrid();
-        // }
     }
 
 }

@@ -2,6 +2,8 @@ package com.example.application.old.criteria;
 
 import com.example.application.old.page.grant.GrantSubject;
 
+import org.apache.commons.lang3.NotImplementedException;
+
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.*;
 import java.util.List;
@@ -21,7 +23,7 @@ public class SubCriteriaQueryContext<T> implements QueryContext<T> {
 
 
     @Override
-    public void where(Expression restriction) {
+    public void where(Expression<Boolean> restriction) {
         subquery.where(restriction);
     }
 
@@ -32,12 +34,12 @@ public class SubCriteriaQueryContext<T> implements QueryContext<T> {
 
     @Override
     public EntityManager getEm() {
-        return null;
+        return em;
     }
 
     @Override
     public Subquery<Integer> subquery() {
-        throw new RuntimeException("subquery");
+        throw new NotImplementedException("subquery");
     }
 
     public Root<T> getRoot() {
@@ -50,11 +52,11 @@ public class SubCriteriaQueryContext<T> implements QueryContext<T> {
     }
 
     public List<GrantSubject> getResultList() {
-        throw new RuntimeException("getResultList");
+        throw new NotImplementedException("getResultList");
     }
 
     @Override
     public void order(List<Order> order) {
-        throw new RuntimeException("getResultList");
+        throw new NotImplementedException("getResultList");
     }
 }

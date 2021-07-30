@@ -19,23 +19,21 @@ import java.util.Properties;
 @PropertySource(value = { "classpath:jdbc.properties", "classpath:application.properties" })
 @EnableTransactionManagement
 public class AppConfig {
-    @Autowired
-    private Environment env;
 
     @Bean
-    public DataSource dataSource() {
-        DataSourceBuilder builder = DataSourceBuilder.create();
-        builder.driverClassName(env.getProperty("driverClassName"));
-        builder.url(env.getProperty("url"));
-        builder.username("root");
-        builder.password(env.getProperty("password"));
-        return builder.build();
+    public DataSource dataSource(@Autowired Environment env) {
+        return DataSourceBuilder.create()
+        .driverClassName(env.getProperty("driverClassName"))
+        .url(env.getProperty("url"))
+        .username("root")
+        .password(env.getProperty("password"))
+        .build();
     }
 
     @Bean(name = "transactionManager")
-    public JpaTransactionManager jpaTransactionManager() {
+    public JpaTransactionManager jpaTransactionManager(@Autowired LocalContainerEntityManagerFactoryBean entityManagerFactory) {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
-        transactionManager.setEntityManagerFactory(entityManagerFactoryBean().getObject());
+        transactionManager.setEntityManagerFactory(entityManagerFactory.getObject());
         return transactionManager;
     }
 
@@ -46,37 +44,19 @@ public class AppConfig {
     }
 
     @Bean(name="entityManagerFactory")
-    public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean() {
+    public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean(@Autowired  DataSource dataSource) {
 
         LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
         entityManagerFactoryBean.setJpaVendorAdapter(vendorAdaptor());
-        entityManagerFactoryBean.setDataSource(dataSource());
+        entityManagerFactoryBean.setDataSource(dataSource);
         entityManagerFactoryBean.setPersistenceProviderClass(HibernatePersistenceProvider.class);
         entityManagerFactoryBean.setPackagesToScan("com.example");
         entityManagerFactoryBean.setJpaProperties(jpaHibernateProperties());
 
         return entityManagerFactoryBean;
     }
-//
-//    @Bean(name="entityManagerFactory")
-//    public LocalSessionFactoryBean sessionFactory() {
-//        LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
-//
-//        return sessionFactory;
-//    }
 
     private Properties jpaHibernateProperties() {
-
-        Properties properties = new Properties();
-//        properties.put("hibernate.dialect", env.getProperty(PROPERTY_NAME_HIBERNATE_MAX_FETCH_DEPTH));
-
-//        properties.put(PROPERTY_NAME_HIBERNATE_MAX_FETCH_DEPTH, env.getProperty(PROPERTY_NAME_HIBERNATE_MAX_FETCH_DEPTH));
-//        properties.put(PROPERTY_NAME_HIBERNATE_JDBC_FETCH_SIZE, env.getProperty(PROPERTY_NAME_HIBERNATE_JDBC_FETCH_SIZE));
-//        properties.put(PROPERTY_NAME_HIBERNATE_JDBC_BATCH_SIZE, env.getProperty(PROPERTY_NAME_HIBERNATE_JDBC_BATCH_SIZE));
-//        properties.put(PROPERTY_NAME_HIBERNATE_SHOW_SQL, env.getProperty(PROPERTY_NAME_HIBERNATE_SHOW_SQL));
-//
-//        properties.put(AvailableSettings.SCHEMA_GEN_DATABASE_ACTION, "none");
-//        properties.put(AvailableSettings.USE_CLASS_ENHANCER, "false");
-        return properties;
+        return new Properties();
     }
 }

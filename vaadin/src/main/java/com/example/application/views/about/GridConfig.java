@@ -3,22 +3,18 @@ package com.example.application.views.about;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import com.example.application.old.page.budget.Budget;
-import com.example.application.old.page.budget.BudgetDto;
 import com.example.application.services.BudgetService3;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 
 public class GridConfig<T> {
     private Class<T> clazz;
-    private List<FieldConfig<T>> properties = new ArrayList();
+    private List<FieldConfig<T>> properties = new ArrayList<>();
     private BeanValidationBinder<T> binder;
     BudgetService3 service;
     
@@ -41,7 +37,7 @@ public class GridConfig<T> {
     }
 
     private void addField(PropertyDescriptor  pd) {
-        properties.add(new FieldConfig<T>(pd, binder, service));
+        properties.add(new FieldConfig<>(pd, binder, service));
     }
 
     public List<Component> getComponents() {
@@ -56,7 +52,4 @@ public class GridConfig<T> {
         return binder;
     }
 
-    public static void main(String[] args) {
-        GridConfig<Budget> c = new GridConfig<>(Budget.class, null);
-    }
 }

@@ -10,8 +10,6 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 
-import com.example.application.old.page.budget.Budget;
-
 import org.springframework.stereotype.Service;
 
 @Service
@@ -28,8 +26,7 @@ public class BudgetService3 {
 
     @Transactional // TODO: nerozumiem na co to tu je
     public <T> T save(T entity) {
-        T response = em.merge(entity);
-        return response;
+        return em.merge(entity);
     }
 
     public <T> List<T> findAll(Class<T> clazz) {

@@ -1,8 +1,5 @@
 package com.example.application.views.about;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import com.example.application.old.page.budget.Budget;
 import com.example.application.services.BudgetService3;
 import com.example.application.views.main.MainView;
@@ -21,6 +18,6 @@ public class AboutViewMain extends Div /*implements BeforeEnterObserver*/ {
     public AboutViewMain(@Autowired BudgetService3 service) {
         setSizeFull();
         add(new Label("TEST"));
-        add(new EntityView<Budget>(new EntityService<Budget,Integer>(service, service.getEm(), Budget.class), new GridConfig<>(Budget.class, service)));
+        add(new EntityView<Budget>(new EntityService<>(service, service.getEm(), Budget.class), new GridConfig<>(Budget.class, service)));
     }
 }
