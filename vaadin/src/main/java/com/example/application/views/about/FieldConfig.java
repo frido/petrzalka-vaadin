@@ -40,7 +40,11 @@ public class FieldConfig<T> {
 
     private String getValue(T x) {
         try {
-            return String.valueOf(property.getReadMethod().invoke(x));
+            if(property.getReadMethod() != null) {
+                return String.valueOf(property.getReadMethod().invoke(x));
+            } else {
+                return "NO READ";
+            }
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
             e.printStackTrace();
         }
