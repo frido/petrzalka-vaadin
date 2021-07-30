@@ -1,8 +1,6 @@
 package com.example.application.views.about;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-
+import com.example.application.services.BudgetService3;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasStyle;
 import com.vaadin.flow.component.UI;
@@ -15,42 +13,38 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
+import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.ValidationException;
 
-public class EntityView<T> extends Div {
-/*
-    private Grid<T> grid;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
+public class EntityView2<E> extends Div {
+
+    private final GridBuilder<E> gridBuilder;
+    BeanValidationBinder<E> binder;
+    private final BudgetService3 service;
+    private Grid<?> grid;
     private Button cancel = new Button("Cancel");
     private Button save = new Button("Save");
-    private transient GridConfig<T> conf;
-    EntityDataProvider<T, Integer> entityDataProvider;
 
-    private transient T selectedEntity;
+    private transient E selectedEntity;
 
-    public EntityView(EntityDataProvider<T, Integer> entityDataProvider, GridConfig<T> conf) {
-        this.entityDataProvider = entityDataProvider;
-        this.conf = conf;
-        grid = new Grid<>(conf.getClazz(), false);
-
+    public  EntityView2(GridBuilder<E> gridBuilder, BudgetService3 service) {
+        this.gridBuilder = gridBuilder;
+        this.grid = gridBuilder.buildGrid();
+        this.binder = gridBuilder.buildBinder();
+        this.service = service;
         SplitLayout splitLayout = new SplitLayout();
-
         createGridLayout(splitLayout);
         createEditorLayout(splitLayout);
-
         add(splitLayout);
 
-        conf.getProperties().forEach(property -> 
-            grid.addColumn(property.getValueProvider())
-                .setHeader(property.getName())
-                .setAutoWidth(true)
-            );
-
-        grid.setDataProvider(entityDataProvider);
         grid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
         grid.setHeightFull();
         grid.asSingleSelect().addValueChangeListener(event -> {
             if (event.getValue() != null) {
-                selectItem(event.getValue());
+                selectItem((E) event.getValue());
             } else {
                 clearForm();
             }
@@ -64,15 +58,15 @@ public class EntityView<T> extends Div {
         save.addClickListener(e -> {
             try {
                 if (this.selectedEntity == null) {
-                    Class<T> clazz = conf.getClazz();
-                    Constructor<T> ctor = clazz.getConstructor();
-                    T object = ctor.newInstance();
+                    Class<E> clazz = gridBuilder.getClazz();
+                    Constructor<E> ctor = clazz.getConstructor();
+                    E object = ctor.newInstance();
                     this.selectedEntity = object;
                 }
 
-                conf.getBinder().writeBean(this.selectedEntity);
+                binder.writeBean(this.selectedEntity);
 
-                entityDataProvider.save(this.selectedEntity);
+                service.save(this.selectedEntity);
                 clearForm();
                 refreshGrid();
                 Notification.show("SamplePerson details stored.");
@@ -93,9 +87,9 @@ public class EntityView<T> extends Div {
     }
 
 
-    private void populateForm(T value) {
+    private void populateForm(E value) {
         this.selectedEntity = value;
-        conf.getBinder().readBean(this.selectedEntity);
+        binder.readBean(this.selectedEntity);
     }
 
     private void createEditorLayout(SplitLayout splitLayout) {
@@ -108,11 +102,11 @@ public class EntityView<T> extends Div {
         editorLayoutDiv.add(editorDiv);
 
         FormLayout formLayout = new FormLayout();
-        
-        for (Component field : conf.getComponents()) {
+
+        for (Component field : gridBuilder.buildComponents(binder)) {
             ((HasStyle) field).addClassName("full-width");
+            formLayout.add(field);
         }
-        conf.getComponents().forEach(formLayout::add);
 
         editorDiv.add(formLayout);
         createButtonLayout(editorLayoutDiv);
@@ -138,8 +132,8 @@ public class EntityView<T> extends Div {
         editorLayoutDiv.add(buttonLayout);
     }
 
-    public void selectItem(T item) {
+    public void selectItem(E item) {
         populateForm(item);
     }
-*/
+
 }

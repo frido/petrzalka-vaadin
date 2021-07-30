@@ -19,16 +19,14 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.vaadin.artur.spring.dataprovider.FilterablePageableDataProvider;
 
-public class EntityService<T, F> extends FilterablePageableDataProvider<T, F>{
+public class EntityDataProvider<T, F> extends FilterablePageableDataProvider<T, F>{
 
     private transient EntityManager em;
     private Class<T> clazz;
-    private transient BudgetService3 service;
 
-    public EntityService(BudgetService3 service, EntityManager em, Class<T> clazz) {
+    public EntityDataProvider(EntityManager em, Class<T> clazz) {
         this.em = em;
         this.clazz = clazz;
-        this.service = service;
     }
 
     @Override
@@ -60,10 +58,10 @@ public class EntityService<T, F> extends FilterablePageableDataProvider<T, F>{
     public Optional<T> get(F id) {
         return Optional.ofNullable(em.find(clazz, id));
     }
-
-    public T save(T entity) {
-        return service.save(entity);
-    }
+//
+//    public T save(T entity) {
+//        return service.save(entity);
+//    }
 
     
 }
