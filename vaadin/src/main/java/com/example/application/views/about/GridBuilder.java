@@ -1,13 +1,11 @@
 package com.example.application.views.about;
 
-import com.example.application.services.BudgetService3;
+import com.example.application.services.EntityService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.provider.DataProvider;
 
-import javax.persistence.EntityManager;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -16,13 +14,11 @@ public class GridBuilder<T> {
 
     private final ColumnBuilderFactory columnBuilderFactory;
     private final GridConfig2<T> conf;
-    private final EntityManager em;
-    private final BudgetService3 service;
+    private final EntityService service;
     private final FieldBuilderFactory fieldBuilderFactory;
 
-    public GridBuilder(GridConfig2<T> conf, EntityManager em, BudgetService3 service) {
+    public GridBuilder(GridConfig2<T> conf, EntityService service) {
         this.conf = conf;
-        this.em = em;
         this.service = service;
         this.columnBuilderFactory = new ColumnBuilderFactory();
         this.fieldBuilderFactory = new FieldBuilderFactory(service);
@@ -40,7 +36,7 @@ public class GridBuilder<T> {
     }
 
     private DataProvider<T,?> getDataProvider() {
-        return new EntityDataProvider<>(em, conf.getClazz());
+        return new EntityDataProvider<>(service.getEm(), conf.getClazz());
     }
 
     public BeanValidationBinder<T> buildBinder() {

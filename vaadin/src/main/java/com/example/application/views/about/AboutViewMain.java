@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.example.application.old.page.budget.Budget;
 import com.example.application.old.page.budget.BudgetProject;
-import com.example.application.services.BudgetService3;
+import com.example.application.services.EntityService;
 import com.example.application.views.main.MainView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -18,12 +18,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 @PageTitle("About")
 @Route(value = "about/:samplePersonID?/:action?(edit)", layout = MainView.class)
-public class AboutViewMain extends Div /*implements BeforeEnterObserver*/ {
+public class AboutViewMain extends Div {
 
     Component currentComponent = new Label("Select something");
 
-    
-    public AboutViewMain(@Autowired BudgetService3 service) {
+    public AboutViewMain(@Autowired EntityService service) {
         setSizeFull();
         ComboBox<GridConfig2<?>> comboBox = new ComboBox<>();
         comboBox.setLabel("Entity");
@@ -36,7 +35,7 @@ public class AboutViewMain extends Div /*implements BeforeEnterObserver*/ {
             GridConfig2<?> config = event.getValue();
             if (event.getValue() == null) {
             } else {
-                GridBuilder<?> gridBuilder = new GridBuilder<>(config, service.getEm(), service);
+                GridBuilder<?> gridBuilder = new GridBuilder<>(config, service);
                 Component newView = new EntityView2<>(gridBuilder, service);
                 replace(currentComponent, newView);
                 setCurrentComponent(newView);

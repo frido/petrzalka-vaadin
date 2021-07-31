@@ -1,6 +1,6 @@
 package com.example.application.views.about;
 
-import com.example.application.services.BudgetService3;
+import com.example.application.services.EntityService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -15,9 +15,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class FieldBuilderFactory {
-    private final BudgetService3 service;
+    private final EntityService service;
 
-    public FieldBuilderFactory(BudgetService3 service) {
+    public FieldBuilderFactory(EntityService service) {
 
         this.service = service;
     }

@@ -1,6 +1,6 @@
 package com.example.application.views.about;
 
-import com.example.application.services.BudgetService3;
+import com.example.application.services.EntityService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasStyle;
 import com.vaadin.flow.component.UI;
@@ -23,14 +23,14 @@ public class EntityView2<E> extends Div {
 
     private final GridBuilder<E> gridBuilder;
     BeanValidationBinder<E> binder;
-    private final BudgetService3 service;
+    private final EntityService service;
     private Grid<?> grid;
     private Button cancel = new Button("Cancel");
     private Button save = new Button("Save");
 
     private transient E selectedEntity;
 
-    public  EntityView2(GridBuilder<E> gridBuilder, BudgetService3 service) {
+    public  EntityView2(GridBuilder<E> gridBuilder, EntityService service) {
         this.gridBuilder = gridBuilder;
         this.grid = gridBuilder.buildGrid();
         this.binder = gridBuilder.buildBinder();

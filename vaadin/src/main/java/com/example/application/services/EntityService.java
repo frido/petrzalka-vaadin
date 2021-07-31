@@ -13,12 +13,10 @@ import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 @Service
-public class BudgetService3 {
+public class EntityService {
 
     @PersistenceContext
     EntityManager em;
-
-    BudgetRepository budgetRepository;
 
     public EntityManager getEm() {
         return em;
