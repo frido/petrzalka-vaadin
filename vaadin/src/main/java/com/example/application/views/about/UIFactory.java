@@ -19,14 +19,14 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.provider.DataProvider;
 
-public class GridConfig2<T> {
+public class UIFactory<T> {
     private final Class<T> clazz;
     private final List<FieldConfig2> properties = new ArrayList<>();
     private List<PropertyDescriptor> propertiesDescriptors;
-    private List<FieldFactory<T>> factories = new ArrayList<>();
+    private List<FieldFactory<T, ?>> factories = new ArrayList<>();
     private EntityManager em;
 
-    GridConfig2(Class<T> clazz, EntityManager em) {
+    UIFactory(Class<T> clazz, EntityManager em) {
         this.clazz = clazz;
         this.em = em;
         try {
@@ -44,7 +44,7 @@ public class GridConfig2<T> {
         getPropertyDescriptorByName(name).map(FieldConfig2::new).ifPresent(properties::add);
     }
 
-    public void addField(FieldFactory<T> factory) {
+    public void addField(FieldFactory<T, ?> factory) {
         factories.add(factory);
     }
 

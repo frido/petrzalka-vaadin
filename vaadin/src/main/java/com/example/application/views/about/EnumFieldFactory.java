@@ -8,16 +8,13 @@ import java.util.stream.Collectors;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
-import com.vaadin.flow.function.ValueProvider;
 
-public class EnumFieldFactory<E, T> extends FieldFactory<E>{
+public class EnumFieldFactory<E, T> extends FieldFactory<E, T>{
 
-    private Function<E, T> getter;
     Class<T> type;
 
     protected EnumFieldFactory(String property, Class<T> type, Function<E, T> getter) {
-        super(property);
-        this.getter = getter;
+        super(property, getter);
         this.type = type;
     }
 
@@ -29,10 +26,4 @@ public class EnumFieldFactory<E, T> extends FieldFactory<E>{
         binder.forField(program).bind(getName());
         return program;
     }
-
-    @Override
-    public ValueProvider<E, ?> getValueProvider() {
-        return x -> getter.apply(x);
-    }
-
 }

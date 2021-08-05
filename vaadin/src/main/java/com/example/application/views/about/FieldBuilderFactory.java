@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Deprecated
 public class FieldBuilderFactory {
     private final EntityService service;
 
@@ -69,8 +70,6 @@ public class FieldBuilderFactory {
 
     private <E> TextField createIntegerField(BeanValidationBinder<E> binder, PropertyDescriptor property) {
         TextField com = new TextField(getName(property));
-        IPokusConfig<?> pc = new PokusConfig();
-        pc.apply(binder.forField(com));
         binder.forField(com).withConverter(new IntegerConverter()).bind(getName(property));
         return com;
     }

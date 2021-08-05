@@ -1,6 +1,5 @@
 package com.example.application.views.about;
 
-import com.example.application.services.EntityService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasStyle;
 import com.vaadin.flow.component.UI;
@@ -16,26 +15,22 @@ import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.ValidationException;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-
 public class EntityView2<E> extends Div {
 
-    private final GridConfig2<E> gridConfig;
+    private transient final UIFactory<E> gridConfig;
     BeanValidationBinder<E> binder;
-    private final EntityService service;
     private Grid<?> grid;
     private Button cancel = new Button("Cancel");
     private Button save = new Button("Save");
 
     private transient E selectedEntity;
 
-    public  EntityView2(GridConfig2<E> gridConfig, EntityService service) {
+    public  EntityView2(UIFactory<E> gridConfig, UserConfiguration service) {
         this.gridConfig = gridConfig;
         this.grid = gridConfig.buildGrid();
         this.binder = gridConfig.buildBinder();
-        this.service = service;
         SplitLayout splitLayout = new SplitLayout();
+        splitLayout.setHeightFull();
         createGridLayout(splitLayout);
         createEditorLayout(splitLayout);
         add(splitLayout);
@@ -115,7 +110,7 @@ public class EntityView2<E> extends Div {
     private void createGridLayout(SplitLayout splitLayout) {
         Div wrapper = new Div();
         wrapper.setId("grid-wrapper");
-
+        wrapper.setWidthFull();
         splitLayout.addToPrimary(wrapper);
         wrapper.add(grid);
     }
