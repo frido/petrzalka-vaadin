@@ -21,7 +21,7 @@ import java.lang.reflect.InvocationTargetException;
 
 public class EntityView2<E> extends Div {
 
-    private final GridBuilder<E> gridBuilder;
+    private final GridConfig2<E> gridConfig;
     BeanValidationBinder<E> binder;
     private final EntityService service;
     private Grid<?> grid;
@@ -30,10 +30,10 @@ public class EntityView2<E> extends Div {
 
     private transient E selectedEntity;
 
-    public  EntityView2(GridBuilder<E> gridBuilder, EntityService service) {
-        this.gridBuilder = gridBuilder;
-        this.grid = gridBuilder.buildGrid();
-        this.binder = gridBuilder.buildBinder();
+    public  EntityView2(GridConfig2<E> gridConfig, EntityService service) {
+        this.gridConfig = gridConfig;
+        this.grid = gridConfig.buildGrid();
+        this.binder = gridConfig.buildBinder();
         this.service = service;
         SplitLayout splitLayout = new SplitLayout();
         createGridLayout(splitLayout);
@@ -58,9 +58,7 @@ public class EntityView2<E> extends Div {
         save.addClickListener(e -> {
             try {
                 if (this.selectedEntity == null) {
-                    Class<E> clazz = gridBuilder.getClazz();
-                    Constructor<E> ctor = clazz.getConstructor();
-                    E object = ctor.newInstance();
+                    E object = gridConfig.createEntity();
                     this.selectedEntity = object;
                 }
 
@@ -71,7 +69,7 @@ public class EntityView2<E> extends Div {
                 refreshGrid();
                 Notification.show("SamplePerson details stored.");
                 UI.getCurrent().navigate(AboutViewMain.class);
-            } catch (ValidationException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException validationException) {
+            } catch (ValidationException | IllegalArgumentException | SecurityException validationException) {
                 Notification.show("An exception happened while trying to store the samplePerson details.");
             }
         });
@@ -103,7 +101,7 @@ public class EntityView2<E> extends Div {
 
         FormLayout formLayout = new FormLayout();
 
-        for (Component field : gridBuilder.buildComponents(binder)) {
+        for (Component field : gridConfig.buildComponents(binder)) {
             ((HasStyle) field).addClassName("full-width");
             formLayout.add(field);
         }

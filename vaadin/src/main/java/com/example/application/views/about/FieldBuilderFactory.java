@@ -71,7 +71,7 @@ public class FieldBuilderFactory {
         TextField com = new TextField(getName(property));
         IPokusConfig<?> pc = new PokusConfig();
         pc.apply(binder.forField(com));
-        // binder.forField(com).withConverter(new IntegerConverter()).bind(getName(property));
+        binder.forField(com).withConverter(new IntegerConverter()).bind(getName(property));
         return com;
     }
 

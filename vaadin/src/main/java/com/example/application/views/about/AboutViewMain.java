@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.example.application.old.page.budget.Budget;
 import com.example.application.old.page.budget.BudgetProject;
+import com.example.application.old.page.project.Program;
 import com.example.application.services.EntityService;
 import com.example.application.views.main.MainView;
 import com.vaadin.flow.component.Component;
@@ -26,16 +27,16 @@ public class AboutViewMain extends Div {
         setSizeFull();
         ComboBox<GridConfig2<?>> comboBox = new ComboBox<>();
         comboBox.setLabel("Entity");
-        GridConfig2 budgetConf = new GridConfig2<>(Budget.class);
-        budgetConf.addField("id");
-        budgetConf.addField("title");
-        budgetConf.addField("year");
-        budgetConf.addField("program");
-        GridConfig2 projectConf = new GridConfig2<>(BudgetProject.class);
-        projectConf.addField("id");
-        projectConf.addField("title");
-        projectConf.addField("description");
-        projectConf.addField("url");
+        GridConfig2<Budget> budgetConf = new GridConfig2<>(Budget.class, service.getEm());
+        budgetConf.addField(new IntegerFieldFactory<>("id", Budget::getId));
+        budgetConf.addField(new StringFieldFactory<>("title", Budget::getTitle));
+        budgetConf.addField(new IntegerFieldFactory<>("year", Budget::getYear));
+        budgetConf.addField(new EnumFieldFactory<>("program", Program.class, Budget::getProgram));
+        GridConfig2<BudgetProject> projectConf = new GridConfig2<>(BudgetProject.class, service.getEm());
+        projectConf.addField(new IntegerFieldFactory<>("id", BudgetProject::getId));
+        projectConf.addField(new StringFieldFactory<>("title", BudgetProject::getTitle));
+        projectConf.addField(new StringFieldFactory<>("description", BudgetProject::getDescription));
+        projectConf.addField(new StringFieldFactory<>("url", BudgetProject::getUrl));
         List<GridConfig2<?>> configlist = Arrays.asList(budgetConf, projectConf);
 
         comboBox.setItems(configlist);
@@ -45,8 +46,8 @@ public class AboutViewMain extends Div {
             GridConfig2<?> config = event.getValue();
             if (event.getValue() == null) {
             } else {
-                GridBuilder<?> gridBuilder = new GridBuilder<>(config, service);
-                Component newView = new EntityView2<>(gridBuilder, service);
+                // GridBuilder<?> gridBuilder = new GridBuilder<>(config, service);
+                Component newView = new EntityView2<>(config, service);
                 replace(currentComponent, newView);
                 setCurrentComponent(newView);
             }
