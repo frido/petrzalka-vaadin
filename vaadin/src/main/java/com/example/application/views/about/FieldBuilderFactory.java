@@ -6,6 +6,9 @@ import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
+import com.vaadin.flow.data.binder.ValidationResult;
+import com.vaadin.flow.data.binder.Validator;
+import com.vaadin.flow.data.binder.Binder.BindingBuilder;
 
 import javax.persistence.Entity;
 import java.beans.PropertyDescriptor;
@@ -66,7 +69,9 @@ public class FieldBuilderFactory {
 
     private <E> TextField createIntegerField(BeanValidationBinder<E> binder, PropertyDescriptor property) {
         TextField com = new TextField(getName(property));
-        binder.forField(com).withConverter(new IntegerConverter()).bind(getName(property));
+        IPokusConfig<?> pc = new PokusConfig();
+        pc.apply(binder.forField(com));
+        // binder.forField(com).withConverter(new IntegerConverter()).bind(getName(property));
         return com;
     }
 

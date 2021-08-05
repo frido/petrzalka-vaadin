@@ -26,7 +26,17 @@ public class AboutViewMain extends Div {
         setSizeFull();
         ComboBox<GridConfig2<?>> comboBox = new ComboBox<>();
         comboBox.setLabel("Entity");
-        List<GridConfig2<?>> configlist = Arrays.asList(new GridConfig2<>(Budget.class), new GridConfig2<>(BudgetProject.class));
+        GridConfig2 budgetConf = new GridConfig2<>(Budget.class);
+        budgetConf.addField("id");
+        budgetConf.addField("title");
+        budgetConf.addField("year");
+        budgetConf.addField("program");
+        GridConfig2 projectConf = new GridConfig2<>(BudgetProject.class);
+        projectConf.addField("id");
+        projectConf.addField("title");
+        projectConf.addField("description");
+        projectConf.addField("url");
+        List<GridConfig2<?>> configlist = Arrays.asList(budgetConf, projectConf);
 
         comboBox.setItems(configlist);
         add(comboBox);

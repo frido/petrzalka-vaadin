@@ -6,18 +6,17 @@ import java.beans.PropertyDescriptor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 public class GridConfig2<T> {
     private final Class<T> clazz;
     private final List<FieldConfig2> properties = new ArrayList<>();
+    private List<PropertyDescriptor> propertiesDescriptors;
 
     GridConfig2(Class<T> clazz) {
         this.clazz = clazz;
         try {
-            Arrays.stream(Introspector.getBeanInfo(clazz).getPropertyDescriptors())
-                    .filter(x -> !x.getDisplayName().equals("class"))
-                    .filter(x -> !x.getDisplayName().equals("projectId"))
-                    .forEach(this::addField);
+            this.propertiesDescriptors = Arrays.asList(Introspector.getBeanInfo(clazz).getPropertyDescriptors());
         } catch (IntrospectionException e) {
             e.printStackTrace();
         }
@@ -27,8 +26,8 @@ public class GridConfig2<T> {
         return clazz;
     }
 
-    private void addField(PropertyDescriptor  pd) {
-        properties.add(new FieldConfig2(pd));
+    public void addField(String name) {
+        getPropertyDescriptorByName(name).map(FieldConfig2::new).ifPresent(properties::add);
     }
 
     public List<FieldConfig2> getProperties() {
@@ -38,5 +37,9 @@ public class GridConfig2<T> {
     @Override
     public String toString() {
         return clazz.getName();
+    }
+
+    private Optional<PropertyDescriptor> getPropertyDescriptorByName(String name) {
+        return propertiesDescriptors.stream().filter(x -> x.getDisplayName().equalsIgnoreCase(name)).findFirst();
     }
 }
