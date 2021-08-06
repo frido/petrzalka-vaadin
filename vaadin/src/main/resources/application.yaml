@@ -2,3 +2,4 @@ logging:
   level:
     root: INFO
     org.hibernate.SQL: INFO
+    org.springframework.transaction.interceptor: TRACE

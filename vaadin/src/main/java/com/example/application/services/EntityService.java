@@ -10,6 +10,11 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 
+import com.example.application.knowledge.MessageQueue;
+import com.example.application.knowledge.Person;
+import com.example.application.old.page.budget.Budget;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,6 +22,9 @@ public class EntityService {
 
     @PersistenceContext
     EntityManager em;
+
+    @Autowired
+    TransactionalService transactionalService;
 
     public EntityManager getEm() {
         return em;
@@ -34,5 +42,28 @@ public class EntityService {
         CriteriaQuery<T> all = cq.select(rootEntry);
         TypedQuery<T> allQuery = em.createQuery(all);
         return allQuery.getResultList();
+    }
+
+    @Transactional
+    public <T> T find(Class<T> clazz) {
+        return em.find(clazz, 1);
+    }
+
+    @Transactional
+    public Person findPersonTree() {
+        Person person = em.find(Person.class, 1);
+        MessageQueue.getInstance().add("findPersonTree - can load departnent: " + person.getDepartment());
+        MessageQueue.getInstance().add("findPersonTree - can load team: " + transactionalService.getTeamNameRequired(person));
+        return person;
+    }
+
+    @Transactional
+    public Budget merge(Budget data) {
+        return em.merge(data);
+    }
+
+    @Transactional
+    public void run(Runnable runnable) {
+        runnable.run();
     }
 }
