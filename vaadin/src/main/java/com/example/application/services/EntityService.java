@@ -7,11 +7,13 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 
 import com.example.application.knowledge.MessageQueue;
 import com.example.application.knowledge.Person;
+import com.example.application.knowledge.Person_;
 import com.example.application.old.page.budget.Budget;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,11 +52,28 @@ public class EntityService {
     }
 
     @Transactional
+    public <T> T merge(T entity) {
+        return em.merge(entity);
+    }
+
+    @Transactional
     public Person findPersonTree() {
         Person person = em.find(Person.class, 1);
         MessageQueue.getInstance().add("findPersonTree - can load departnent: " + person.getDepartment());
         MessageQueue.getInstance().add("findPersonTree - can load team: " + transactionalService.getTeamNameRequired(person));
         return person;
+    }
+
+    @Transactional
+    public Person findPersonFetch() {
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Person> cq = cb.createQuery(Person.class);
+        Root<Person> rootEntry = cq.from(Person.class);
+        rootEntry.fetch(Person_.team, JoinType.LEFT);
+        cq.where(cb.equal(rootEntry.get(Person_.id), 1));
+        CriteriaQuery<Person> all = cq.select(rootEntry);
+        TypedQuery<Person> allQuery = em.createQuery(all);
+        return allQuery.getSingleResult();
     }
 
     @Transactional

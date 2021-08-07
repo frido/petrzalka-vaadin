@@ -14,7 +14,7 @@ public class Person {
     @Id
     private int id;
     private String name;
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "department_id", referencedColumnName = "id")
     private Department department;
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
