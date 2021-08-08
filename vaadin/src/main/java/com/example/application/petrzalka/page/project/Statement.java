@@ -1,8 +1,6 @@
-package com.example.application.petrzalka.model;
+package com.example.application.petrzalka.page.project;
 
 import javax.persistence.*;
-
-import com.example.application.petrzalka.page.project.Project;
 
 import java.time.LocalDate;
 

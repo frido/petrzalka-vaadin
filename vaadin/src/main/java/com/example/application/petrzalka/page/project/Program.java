@@ -1,8 +1,6 @@
 package com.example.application.petrzalka.page.project;
 
-import com.example.application.petrzalka.model.IndexedEnum;
-
-public enum Program implements IndexedEnum {
+public enum Program {
     TEST(1);
 
     private final Integer id;
@@ -11,7 +9,6 @@ public enum Program implements IndexedEnum {
         this.id = i;
     }
 
-    @Override
     public int getValue() {
         return id;
     }

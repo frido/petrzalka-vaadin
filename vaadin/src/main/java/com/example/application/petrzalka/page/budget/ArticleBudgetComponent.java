@@ -34,9 +34,9 @@ public class ArticleBudgetComponent extends HtmlTag {
 
     private HtmlTag budget() {
         HtmlTag row = new Div("budget-row");
-        for (Integer year : project.getYears()) {
+        for (Integer projectYear : project.getYears()) {
             Row budgetRow = (Row) row.createContent(new Row());
-            if (this.year != year) {
+            if (this.year != projectYear) {
                 budgetRow.clazz("small");
             }
             budgetRow.column("col-md-1").with(String.valueOf(year));

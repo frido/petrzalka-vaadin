@@ -19,9 +19,6 @@ public class BudgetDto {
     private Boolean useAmountReal;
     private Boolean showComment;
 
-    public BudgetDto() {
-    }
-
     public int getId() {
         return id;
     }

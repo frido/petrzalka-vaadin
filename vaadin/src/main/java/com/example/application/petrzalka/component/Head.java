@@ -9,6 +9,9 @@ import com.example.application.petrzalka.page.HeadProvider;
 
 public class Head extends HtmlTag {
 
+    private static final String STYLESHEET = "stylesheet";
+    private static final String SCRIPT = "script";
+
     public Head(ConfigurationProvider configProvider, HeadProvider headProvider) {
         super("head");
         Base base = new Base(configProvider.getConfig().getBase());
@@ -28,11 +31,11 @@ public class Head extends HtmlTag {
         addContent(new MetaProperty("og:description", headProvider.getDescription()));
         addContent(new MetaProperty("og:image", headProvider.getIcon()));
         addContent(new MetaProperty("fb:app_id", "294839814987467"));
-        addContent(new Link("https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&display=swap", "stylesheet"));
-        addContent(new Link("https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap", "stylesheet"));
-        addContent(new Link("https://fonts.googleapis.com/css2?family=Roboto&display=swap", "stylesheet"));
-        addContent(new Link("css/boot2.css", "stylesheet"));
-        addContent(new HtmlTag("script").as("src", "js/index.js"));
+        addContent(new Link("https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&display=swap", STYLESHEET));
+        addContent(new Link("https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap", STYLESHEET));
+        addContent(new Link("https://fonts.googleapis.com/css2?family=Roboto&display=swap", STYLESHEET));
+        addContent(new Link("css/boot2.css", STYLESHEET));
+        addContent(new HtmlTag(SCRIPT).as("src", "js/index.js"));
         addContent(new Link("img/favicon.ico", "icon").as("type", "image/ico"));
         addContent(new Link("", "canonical"));
         addContent(new Link("/feed/feed.xml", "alternate").as("type", "application/atom+xml").as("title", "Projekty v Petržalke"));
@@ -40,16 +43,14 @@ public class Head extends HtmlTag {
     }
 
     private void googleAnalytics() {
-//        addContent(new HtmlTag("script").as("type", "text/javascript").as("src", "https://www.google-analytics.com/analytics.js").as("async"));
-        addContent(new HtmlTag("script").as("src", "https://www.googletagmanager.com/gtag/js?id=UA-130722892-1").as("async"));
-        addContent(new HtmlTag("script").with("\n" +
-                "      window.dataLayer = window.dataLayer || [];\n" +
-                "      function gtag() {\n" +
-                "        dataLayer.push(arguments);\n" +
-                "      }\n" +
-                "      gtag('js', new Date());\n" +
-                "\n" +
-                "      gtag('config', 'UA-130722892-1');\n" +
-                "    "));
+        addContent(new HtmlTag(SCRIPT).as("src", "https://www.googletagmanager.com/gtag/js?id=UA-130722892-1").as("async"));
+        addContent(new HtmlTag(SCRIPT).with("""
+                window.dataLayer = window.dataLayer || [];
+                function gtag() {
+                  dataLayer.push(arguments);
+                }
+                gtag('js', new Date());
+                gtag('config', 'UA-130722892-1');
+                """));
     }
 }

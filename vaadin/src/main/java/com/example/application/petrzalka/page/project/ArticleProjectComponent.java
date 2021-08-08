@@ -2,7 +2,6 @@ package com.example.application.petrzalka.page.project;
 
 import com.example.application.petrzalka.component.PageHeader;
 import com.example.application.petrzalka.html.*;
-import com.example.application.petrzalka.model.Statement;
 
 public class ArticleProjectComponent extends HtmlTag {
 

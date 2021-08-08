@@ -2,20 +2,20 @@ package com.example.application.petrzalka.component;
 
 public class Base {
 
-    private String base;
+    private String baseUrl;
 
     public Base(String base) {
-        this.base = base;
+        this.baseUrl = base;
     }
 
     public String resolve(String url) {
         if (url.startsWith("http")) {
             return url;
         }
-        return base + url;
+        return baseUrl + url;
     }
 
     public String resolve(String url, String name) {
-        return base + url + "/" + name + "/";
+        return baseUrl + url + "/" + name + "/";
     }
 }

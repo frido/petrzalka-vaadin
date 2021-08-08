@@ -6,16 +6,16 @@ import com.example.application.petrzalka.html.HtmlTag;
 
 public class Title extends HtmlTag {
 
-    private final HtmlNoTag title;
+    private final HtmlNoTag text;
 
     public Title(String title) {
         super("header");
-        this.title = new HtmlNoTag(title);
+        this.text = new HtmlNoTag(title);
     }
 
     @Override
     public String toString() {
-        addContent(new H(1, "", title));
+        addContent(new H(1, "", text));
         return super.toString();
     }
 }

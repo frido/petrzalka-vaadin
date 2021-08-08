@@ -37,6 +37,6 @@ public class GrantService {
     }
 
     private List<GrantItem> findByCriteria(InterfaceCriteriaBuilder<GrantItem> criteriaBuilder, int limit) {
-        return new CriteriaQueryContext(em, GrantItem.class).apply(criteriaBuilder).apply(defaultOrder).getResultList(limit);
+        return new CriteriaQueryContext<>(em, GrantItem.class).apply(criteriaBuilder).apply(defaultOrder).getResultList(limit);
     }
 }

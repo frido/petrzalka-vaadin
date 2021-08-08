@@ -29,7 +29,6 @@ public class PageHeader extends Header {
         addNavigationLink(nav, POSTS, "Projekty");
         addNavigationLink(nav, GRANTS, "Granty");
         addNavigationLink(nav, BUDGET, "Inv. Plán");
-//        addNavigationLink(nav, "/ihriska/", "Ihriská");
         row.addContent(nav);
 
         mainDiv.addContent(row);

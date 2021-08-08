@@ -5,6 +5,10 @@ import com.example.application.petrzalka.html.Div;
 import com.example.application.petrzalka.html.HtmlTag;
 
 public class BudgetStatusHeaderVisitor implements BudgetStatusVisitor {
+    /**
+     *
+     */
+    private static final String TEXT_RIGHT = "text-right";
     private final HtmlTag segment;
     private final BudgetListDto list;
 
@@ -19,7 +23,7 @@ public class BudgetStatusHeaderVisitor implements BudgetStatusVisitor {
         HtmlTag row = createRow(status);
         row(row,2, description(status));
         row(row,2, projectCount(list.size()));
-        row(row,8, "Výdavky: " + Amount.of(list.calculateRealAmount())).clazz("text-right");
+        row(row,8, "Výdavky: " + Amount.of(list.calculateRealAmount())).clazz(TEXT_RIGHT);
     }
 
     private String description(BudgetStatus status) {
@@ -33,7 +37,7 @@ public class BudgetStatusHeaderVisitor implements BudgetStatusVisitor {
         row(row,2, description(status));
         row(row,2, projectCount(list.size()));
         row(row,4, "Aktuálne výdavky: " + Amount.of(list.calculateRealAmount()));
-        row(row,4, "Plánované výdavky: " + Amount.of(list.calculateOriginalAmount())).clazz("text-right");
+        row(row,4, "Plánované výdavky: " + Amount.of(list.calculateOriginalAmount())).clazz(TEXT_RIGHT);
     }
 
     @Override
@@ -41,7 +45,7 @@ public class BudgetStatusHeaderVisitor implements BudgetStatusVisitor {
         BudgetStatus status = BudgetStatus.POSTPONE;
         HtmlTag row = createRow(status);
         row(row,2, description(status));
-        row(row,2, projectCount(list.size())).clazz("text-right"); // TODO: last child in row as text-right: do it in css
+        row(row,2, projectCount(list.size())).clazz(TEXT_RIGHT); // TODO: last child in row as text-right: do it in css
     }
 
     @Override
@@ -49,7 +53,7 @@ public class BudgetStatusHeaderVisitor implements BudgetStatusVisitor {
         BudgetStatus status = BudgetStatus.ERROR;
         HtmlTag row = createRow(status);
         row(row,2, description(status));
-        row(row,2, projectCount(list.size())).clazz("text-right");
+        row(row,2, projectCount(list.size())).clazz(TEXT_RIGHT);
     }
 
     private HtmlTag row(HtmlTag row, int columnSize, String text) {

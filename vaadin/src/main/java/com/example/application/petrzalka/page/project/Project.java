@@ -2,8 +2,6 @@ package com.example.application.petrzalka.page.project;
 
 import javax.persistence.*;
 
-import com.example.application.petrzalka.model.Statement;
-
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
@@ -19,9 +17,6 @@ public class Project {
     @ManyToOne()
     @JoinColumn(name = "icon", referencedColumnName = "id")
     private Image icon;
-//    @ManyToOne()
-//    @JoinColumn(name = "project_id", referencedColumnName = "id")
-//    private Budget budget;
     private String url;
     @Enumerated(EnumType.STRING)
     private ProjectPhase phase;
@@ -83,14 +78,6 @@ public class Project {
     public void setIcon(Image icon) {
         this.icon = icon;
     }
-//
-//    public Budget getBudget() {
-//        return budget;
-//    }
-//
-//    public void setBudget(Budget budget) {
-//        this.budget = budget;
-//    }
 
     public String getUrl() {
         return url;
