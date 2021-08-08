@@ -1,6 +1,14 @@
 package com.example.application;
 
-import org.hibernate.SessionFactory;
+import java.util.Properties;
+
+import javax.servlet.http.HttpSessionEvent;
+import javax.servlet.http.HttpSessionListener;
+import javax.sql.DataSource;
+
+import com.example.application.knowledge.CustomInterceptorImpl;
+import com.example.application.knowledge.MessageQueue;
+
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.DataSourceBuilder;
@@ -8,24 +16,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
-import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.transaction.interceptor.TransactionInterceptor;
-
-import javax.servlet.http.HttpSessionEvent;
-import javax.servlet.http.HttpSessionListener;
-import javax.sql.DataSource;
-
-import com.example.application.knowledge.CustomInterceptorImpl;
-import com.example.application.knowledge.CustomTransactionInterceptor;
-import com.example.application.knowledge.MessageQueue;
-import com.vaadin.flow.spring.SpringVaadinServletService;
-
-import java.util.Enumeration;
-import java.util.Properties;
 
 @Configuration
 @PropertySource(value = { "classpath:jdbc.properties", "classpath:application.properties" })
@@ -69,10 +63,6 @@ public class AppConfig {
         entityManagerFactoryBean.setJpaProperties(properties);
 
         return entityManagerFactoryBean;
-    }
-
-    private Properties jpaHibernateProperties() {
-        return new Properties();
     }
 
     @Bean

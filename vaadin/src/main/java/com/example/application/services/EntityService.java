@@ -14,7 +14,7 @@ import javax.transaction.Transactional;
 import com.example.application.knowledge.MessageQueue;
 import com.example.application.knowledge.Person;
 import com.example.application.knowledge.Person_;
-import com.example.application.old.page.budget.Budget;
+import com.example.application.petrzalka.page.budget.Budget;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

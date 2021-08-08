@@ -5,9 +5,7 @@ import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import javax.transaction.Transactional.TxType;
 
-import com.example.application.knowledge.MessageQueue;
 import com.example.application.knowledge.Person;
-import com.example.application.knowledge.Team;
 
 import org.springframework.stereotype.Service;
 

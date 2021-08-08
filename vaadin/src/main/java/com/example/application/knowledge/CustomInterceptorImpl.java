@@ -1,19 +1,9 @@
 package com.example.application.knowledge;
 
 import java.io.Serializable;
-import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Spliterator;
-import java.util.Spliterators;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 import org.hibernate.CallbackException;
 import org.hibernate.EmptyInterceptor;
@@ -24,14 +14,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class CustomInterceptorImpl extends EmptyInterceptor {
-    
-    
 
     static long serialVersionUID = 1l;
 
-    private MessageQueue queue = MessageQueue.getInstance();
-
-    
+    private transient MessageQueue queue = MessageQueue.getInstance();
 
     private void add(String msg) {
         queue.add(msg);
