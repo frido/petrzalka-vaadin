@@ -5,7 +5,6 @@ import org.springframework.stereotype.Component;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import com.example.application.old.page.project.Project_;
 import com.example.application.petrzalka.criteria.AttributeOrderCriteriaBuilder;
 import com.example.application.petrzalka.criteria.CriteriaQueryContext;
 import com.example.application.petrzalka.criteria.InterfaceCriteriaBuilder;

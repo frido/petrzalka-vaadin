@@ -1,5 +1,7 @@
 package com.example.application.knowledge;
 
+import java.util.Objects;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -66,4 +68,21 @@ public class Person {
     private String getJavaId() {
         return super.toString().substring(super.toString().indexOf("@"));
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this)
+            return true;
+        if (!(o instanceof Person)) {
+            return false;
+        }
+        Person person = (Person) o;
+        return id == person.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
+
 }

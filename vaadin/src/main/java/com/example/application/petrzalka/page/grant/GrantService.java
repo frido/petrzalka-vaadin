@@ -5,8 +5,6 @@ import org.springframework.stereotype.Component;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import com.example.application.old.page.grant.GrantItem_;
-import com.example.application.old.page.grant.GrantSubject_;
 import com.example.application.petrzalka.criteria.*;
 
 import java.util.Collection;
@@ -19,7 +17,11 @@ public class GrantService {
 
     @PersistenceContext
     private EntityManager em;
-    private final InterfaceCriteriaBuilder<GrantItem> defaultOrder = new AttributeOrderCriteriaBuilder<>(List.of(GrantItem_.year, GrantItem_.amount));
+    private final InterfaceCriteriaBuilder<GrantItem> defaultOrder;
+
+    public GrantService() {
+        defaultOrder = new AttributeOrderCriteriaBuilder<>(List.of(GrantItem_.year, GrantItem_.amount));
+    }
 
     public Collection<GrantDto> getGrantTreeByCategory(GrantCategory category, int limit) {
         List<GrantItem> grantList = this.findByCriteria(

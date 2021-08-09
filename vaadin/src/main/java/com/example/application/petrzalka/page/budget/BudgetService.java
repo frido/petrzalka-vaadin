@@ -11,8 +11,6 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 
-import com.example.application.old.page.budget.BudgetProject_;
-import com.example.application.old.page.budget.Budget_;
 import com.example.application.petrzalka.criteria.*;
 
 import java.util.List;

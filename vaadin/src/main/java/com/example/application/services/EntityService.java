@@ -13,6 +13,7 @@ import javax.transaction.Transactional;
 
 import com.example.application.knowledge.MessageQueue;
 import com.example.application.knowledge.Person;
+import com.example.application.knowledge.PersonDto;
 import com.example.application.knowledge.Person_;
 import com.example.application.petrzalka.page.budget.Budget;
 
@@ -62,6 +63,22 @@ public class EntityService {
         MessageQueue.getInstance().add("findPersonTree - can load departnent: " + person.getDepartment());
         MessageQueue.getInstance().add("findPersonTree - can load team: " + transactionalService.getTeamNameRequired(person));
         return person;
+    }
+
+    @Transactional
+    public PersonDto findPersonDto() {
+        var cb = em.getCriteriaBuilder();
+        CriteriaQuery<PersonDto> cq = cb.createQuery(PersonDto.class);
+        Root<Person> root = cq.from(Person.class);
+        cq.select(cb.construct(PersonDto.class, 
+            root.get(Person_.id),
+            root.get(Person_.name),
+            root.get(Person_.department),
+            root.get(Person_.team)
+            ));
+        cq.where(cb.equal(root.get(Person_.id), 1));
+        TypedQuery<PersonDto> allQuery = em.createQuery(cq);
+        return allQuery.getSingleResult();
     }
 
     @Transactional
