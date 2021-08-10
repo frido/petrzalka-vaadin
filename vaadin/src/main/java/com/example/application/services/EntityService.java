@@ -14,6 +14,7 @@ import javax.transaction.Transactional;
 import com.example.application.knowledge.MessageQueue;
 import com.example.application.knowledge.Person;
 import com.example.application.knowledge.PersonDto;
+import com.example.application.knowledge.PersonWithVersion;
 import com.example.application.knowledge.Person_;
 import com.example.application.petrzalka.page.budget.Budget;
 
@@ -50,6 +51,11 @@ public class EntityService {
     @Transactional
     public <T> T find(Class<T> clazz) {
         return em.find(clazz, 1);
+    }
+
+    @Transactional
+    public PersonWithVersion findPersonWithVersion() {
+        return em.find(PersonWithVersion.class, 1);
     }
 
     @Transactional

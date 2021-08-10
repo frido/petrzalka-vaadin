@@ -5,6 +5,7 @@ import java.time.LocalTime;
 import com.example.application.knowledge.Department;
 import com.example.application.knowledge.MessageQueue;
 import com.example.application.knowledge.Person;
+import com.example.application.knowledge.PersonWithVersion;
 import com.example.application.knowledge.Team;
 import com.example.application.services.EntityService;
 import com.example.application.views.main.MainView;
@@ -12,6 +13,7 @@ import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
@@ -27,9 +29,11 @@ public class KnowledgeView extends Div {
     private transient MessageQueue messageQueue = MessageQueue.getInstance();
     private VerticalLayout infoPanel;
     private transient Person personEntity;
+    private transient PersonWithVersion personWithVersionEntity;
     private transient Department departmentEntity;
     private transient Team teamEntity;
     private Label personLabel = new Label();
+    private Label personWithVersionLabel = new Label();
     private Label departmentLabel = new Label();
     private Label teamLabel = new Label();
 
@@ -52,24 +56,28 @@ public class KnowledgeView extends Div {
         buttonPanel.add(person1, person2);
 
         var merge1 = new HorizontalLayout();
+        var merge2 = new HorizontalLayout();
         var mergePersonBtn = new Button("Merge Person", this::onMergePerson);
         var mergePersonAllBtn = new Button("Merge Person All", this::onMergePersonAll);
-        merge1.add(mergePersonBtn, mergePersonAllBtn);
-        var merge2 = new HorizontalLayout();
         var mergePersonDtoBtn = new Button("Merge Person DTO", this::onMergePersonDto);
-        // var mergePersonVersionBtn = new Button("Merge Person Version", null);
-        merge2.add(mergePersonDtoBtn);
-        buttonPanel.add(merge1, merge2);
-        // merge s version - optimistil lock exception
+        var loadPersonVersionBtn = new Button("Load Person Version", this::onLoadPersonVerson);
+        var changePersonVersionBtn = new Button("Change Person Version", this::onChangePersonVerson);
+        var mergePersonVersionBtn = new Button("Merge Person Version", this::onMergePersonVerson);
+        merge1.add(mergePersonBtn, mergePersonAllBtn, mergePersonDtoBtn);
+        merge2.add(loadPersonVersionBtn, changePersonVersionBtn, mergePersonVersionBtn);
+        buttonPanel.add(merge1, personWithVersionLabel, merge2);
 
-
-        // TODO: transaction isolation, sesions (httpSession, VaadinSession, SpringSession)
+        // TODO: transaction isolation, sesions (httpSession, VaadinSession, SpringSession)?
+        // TODO: kde sa inicializuje VaadinServlet?
+        // TODO: ine formy optimistic lock (version) rieseni
 
         infoPanel = new VerticalLayout();
         
         var main = new HorizontalLayout();
         main.add(buttonPanel, infoPanel);
         add(main);
+
+        messageQueue.addListener(x -> infoPanel.addComponentAtIndex(0, new Label("..." + x)));
     }
 
     private void refreshInfoPanel(ClickEvent<Button> event) {
@@ -112,6 +120,29 @@ public class KnowledgeView extends Div {
         personEnt = service.merge(personEnt);
         personLabel.setText(String.valueOf(personEnt));
         updateInfoPanel();
+    }
+
+    private void onLoadPersonVerson(ClickEvent<Button> event) {
+        personWithVersionEntity = service.findPersonWithVersion();
+        personWithVersionLabel.setText(String.valueOf(personWithVersionEntity));
+        updateInfoPanel();
+    }
+
+    private void onChangePersonVerson(ClickEvent<Button> event) {
+        var person = service.findPersonWithVersion();
+        person.setName(randomText());
+        service.merge(person);
+        updateInfoPanel();
+    }
+
+    private void onMergePersonVerson(ClickEvent<Button> event) {
+        try {
+        personWithVersionEntity.setName(randomText());
+        service.merge(personWithVersionEntity);
+        updateInfoPanel();
+        } catch (Exception e) {
+            Notification.show(e.getMessage());
+        }
     }
 
     private void findPersonTree(ClickEvent<Button> event) {
