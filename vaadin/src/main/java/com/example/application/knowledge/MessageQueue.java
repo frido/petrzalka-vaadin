@@ -44,6 +44,7 @@ public class MessageQueue {
     }
 
     public void addListener(Consumer<String> listener) {
+        queue.forEach(listener);
         this.listeners.add(listener);
     }
     

@@ -73,12 +73,12 @@ public class AppConfig {
     
             @Override
             public void sessionCreated(HttpSessionEvent hse) {
-                messageQueue.add("Session created");
+                messageQueue.add("Http Session created" + hse.getSession());
             }
         
             @Override
             public void sessionDestroyed(HttpSessionEvent hse) {
-                messageQueue.add("Session destroyed");
+                messageQueue.add("Http Session destroyed");
             }
             
         };

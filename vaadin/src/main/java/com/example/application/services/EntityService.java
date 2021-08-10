@@ -54,6 +54,13 @@ public class EntityService {
     }
 
     @Transactional
+    public Person findAndEdit() {
+        var person = em.find(Person.class, 1);
+        person.setName("edited in service");
+        return person;
+    }
+
+    @Transactional
     public PersonWithVersion findPersonWithVersion() {
         return em.find(PersonWithVersion.class, 1);
     }

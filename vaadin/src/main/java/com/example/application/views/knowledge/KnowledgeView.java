@@ -41,8 +41,7 @@ public class KnowledgeView extends Div {
         this.service = service;
 
         var buttonPanel = new VerticalLayout();
-        var refreshInfoPanel = new Button("Refresh", this::refreshInfoPanel);
-        buttonPanel.add(personLabel, departmentLabel, teamLabel, refreshInfoPanel);
+        buttonPanel.add(personLabel, departmentLabel, teamLabel);
         
         var person1 = new HorizontalLayout();
         var loadPersonBtn = new Button("Load Person", this::onLoadPerson);
@@ -57,38 +56,45 @@ public class KnowledgeView extends Div {
 
         var merge1 = new HorizontalLayout();
         var merge2 = new HorizontalLayout();
+        var merge3 = new HorizontalLayout();
         var mergePersonBtn = new Button("Merge Person", this::onMergePerson);
         var mergePersonAllBtn = new Button("Merge Person All", this::onMergePersonAll);
         var mergePersonDtoBtn = new Button("Merge Person DTO", this::onMergePersonDto);
         var loadPersonVersionBtn = new Button("Load Person Version", this::onLoadPersonVerson);
         var changePersonVersionBtn = new Button("Change Person Version", this::onChangePersonVerson);
         var mergePersonVersionBtn = new Button("Merge Person Version", this::onMergePersonVerson);
+        var editPersonInServiceBtn = new Button("Edit Person In Service", this::onEditPersonInService);
+        var editPersonOutServiceBtn = new Button("Edit Person Out Service", this::onEditPersonOutService);
         merge1.add(mergePersonBtn, mergePersonAllBtn, mergePersonDtoBtn);
         merge2.add(loadPersonVersionBtn, changePersonVersionBtn, mergePersonVersionBtn);
-        buttonPanel.add(merge1, personWithVersionLabel, merge2);
+        merge3.add(editPersonInServiceBtn, editPersonOutServiceBtn);
+        buttonPanel.add(merge1, personWithVersionLabel, merge2, merge3);
 
+        // TODO: batch edit of list
         // TODO: transaction isolation, sesions (httpSession, VaadinSession, SpringSession)?
         // TODO: kde sa inicializuje VaadinServlet?
         // TODO: ine formy optimistic lock (version) rieseni
+        // TODO: java packages dependency grapgh
+        // TODO: routing stranok
+        // TODO: Authorizacia usera
+        // TODO: Cachovanie master data, alebo cokolvek ine
+        // TODO: Genericke filtrovanie/sortovanie gridov
 
         infoPanel = new VerticalLayout();
-        
+        infoPanel.setPadding(false);
+        infoPanel.setSpacing(false);
+
         var main = new HorizontalLayout();
         main.add(buttonPanel, infoPanel);
         add(main);
 
-        messageQueue.addListener(x -> infoPanel.addComponentAtIndex(0, new Label("..." + x)));
-    }
-
-    private void refreshInfoPanel(ClickEvent<Button> event) {
-        updateInfoPanel();
+        messageQueue.addListener(x -> infoPanel.addComponentAtIndex(0, new Label(x)));
     }
 
     private void onLoadPerson(ClickEvent<Button> event) {
         clean();
         personEntity = service.find(Person.class);
         personLabel.setText(String.valueOf(personEntity));
-        updateInfoPanel();
     }
 
     private void onMergePerson(ClickEvent<Button> event) {
@@ -96,7 +102,19 @@ public class KnowledgeView extends Div {
         personEntity.setName(randomText());
         personEntity = service.merge(personEntity);
         personLabel.setText(String.valueOf(personEntity));
-        updateInfoPanel();
+    }
+
+    private void onEditPersonInService(ClickEvent<Button> event) {
+        clean();
+        personEntity = service.findAndEdit();
+        personLabel.setText(String.valueOf(personEntity));
+    }
+
+    private void onEditPersonOutService(ClickEvent<Button> event) {
+        clean();
+        personEntity = service.find(Person.class);
+        personEntity.setName("edited out service");
+        personLabel.setText(String.valueOf(personEntity));
     }
 
     private void onMergePersonAll(ClickEvent<Button> event) {
@@ -106,7 +124,6 @@ public class KnowledgeView extends Div {
         personEntity.getTeam().setName(randomText());
         personEntity = service.merge(personEntity);
         personLabel.setText(String.valueOf(personEntity));
-        updateInfoPanel();
     }
 
     private void onMergePersonDto(ClickEvent<Button> event) {
@@ -119,27 +136,23 @@ public class KnowledgeView extends Div {
         personEnt.setTeam(personDto.team()); // TODO: nie uplne spravne DTO kedze toto je proxy
         personEnt = service.merge(personEnt);
         personLabel.setText(String.valueOf(personEnt));
-        updateInfoPanel();
     }
 
     private void onLoadPersonVerson(ClickEvent<Button> event) {
         personWithVersionEntity = service.findPersonWithVersion();
         personWithVersionLabel.setText(String.valueOf(personWithVersionEntity));
-        updateInfoPanel();
     }
 
     private void onChangePersonVerson(ClickEvent<Button> event) {
         var person = service.findPersonWithVersion();
         person.setName(randomText());
         service.merge(person);
-        updateInfoPanel();
     }
 
     private void onMergePersonVerson(ClickEvent<Button> event) {
         try {
         personWithVersionEntity.setName(randomText());
         service.merge(personWithVersionEntity);
-        updateInfoPanel();
         } catch (Exception e) {
             Notification.show(e.getMessage());
         }
@@ -153,7 +166,6 @@ public class KnowledgeView extends Div {
         personLabel.setText(String.valueOf(personEntity));
         teamLabel.setText(String.valueOf(teamEntity));
         departmentLabel.setText(String.valueOf(departmentEntity));
-        updateInfoPanel();
     }
 
     private void findPersonFetch(ClickEvent<Button> event) {
@@ -164,24 +176,17 @@ public class KnowledgeView extends Div {
         personLabel.setText(String.valueOf(personEntity));
         teamLabel.setText(String.valueOf(teamEntity));
         departmentLabel.setText(String.valueOf(departmentEntity));
-        updateInfoPanel();
     }
     
 
     private void onGetDepartment(ClickEvent<Button> event) {
         departmentEntity = personEntity.getDepartment();
         departmentLabel.setText(String.valueOf(departmentEntity));
-        updateInfoPanel();
     }
 
     private void onGetTeam(ClickEvent<Button> event) {
         teamEntity = personEntity.getTeam();
         service.run(() -> teamLabel.setText(String.valueOf(teamEntity)));
-        updateInfoPanel();
-    }
-    
-    private void updateInfoPanel() {
-        messageQueue.poolAll().forEach(str -> infoPanel.addComponentAtIndex(0, new Label(str)));
     }
 
     private void clean() {
