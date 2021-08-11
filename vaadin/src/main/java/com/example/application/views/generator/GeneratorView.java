@@ -23,7 +23,7 @@ import java.util.Arrays;
 public class GeneratorView extends Div {
 
     @Autowired
-    MainRunner runner;
+    private transient MainRunner runner;
 
     private TextField outDirField;
     private ComboBox<String> baseField;

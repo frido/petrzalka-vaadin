@@ -5,7 +5,6 @@ import java.util.function.Function;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
-import com.vaadin.flow.function.ValueProvider;
 
 public class BooleanFieldFactory<E> extends FieldFactory<E, Boolean> {
 
@@ -18,7 +17,7 @@ public class BooleanFieldFactory<E> extends FieldFactory<E, Boolean> {
         Checkbox com = new Checkbox(property);
         binder.forField(com).bind(property);
         return com;
-        
+
     }
 
 

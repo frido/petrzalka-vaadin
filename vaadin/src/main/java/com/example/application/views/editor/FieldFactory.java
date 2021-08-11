@@ -1,9 +1,7 @@
 package com.example.application.views.editor;
 
 import java.util.function.Function;
-
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.PropertyDescriptor;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.function.ValueProvider;

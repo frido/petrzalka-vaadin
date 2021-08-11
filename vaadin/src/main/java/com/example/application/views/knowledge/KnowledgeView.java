@@ -57,6 +57,7 @@ public class KnowledgeView extends Div {
         var merge1 = new HorizontalLayout();
         var merge2 = new HorizontalLayout();
         var merge3 = new HorizontalLayout();
+        var merge4 = new HorizontalLayout();
         var mergePersonBtn = new Button("Merge Person", this::onMergePerson);
         var mergePersonAllBtn = new Button("Merge Person All", this::onMergePersonAll);
         var mergePersonDtoBtn = new Button("Merge Person DTO", this::onMergePersonDto);
@@ -65,13 +66,17 @@ public class KnowledgeView extends Div {
         var mergePersonVersionBtn = new Button("Merge Person Version", this::onMergePersonVerson);
         var editPersonInServiceBtn = new Button("Edit Person In Service", this::onEditPersonInService);
         var editPersonOutServiceBtn = new Button("Edit Person Out Service", this::onEditPersonOutService);
+        var editAllPersons = new Button("Edit All Persons", this::onEditAllPersons);
+        var editAllPersonsBatch = new Button("Edit All Persons Batch", this::onEditAllPersonsBatch);
         merge1.add(mergePersonBtn, mergePersonAllBtn, mergePersonDtoBtn);
         merge2.add(loadPersonVersionBtn, changePersonVersionBtn, mergePersonVersionBtn);
         merge3.add(editPersonInServiceBtn, editPersonOutServiceBtn);
-        buttonPanel.add(merge1, personWithVersionLabel, merge2, merge3);
+        merge4.add(editAllPersons, editAllPersonsBatch);
+        buttonPanel.add(merge1, personWithVersionLabel, merge2, merge3, merge4);
 
-        // TODO: batch edit of list
+        // TODO: why more entity managers, preco ma ten v pm1 meno a cim sa lisi od ostatnycb
         // TODO: transaction isolation, sesions (httpSession, VaadinSession, SpringSession)?
+        // TODO: splitnut projekt na generovanie a knowledge
         // TODO: kde sa inicializuje VaadinServlet?
         // TODO: ine formy optimistic lock (version) rieseni
         // TODO: java packages dependency grapgh
@@ -115,6 +120,16 @@ public class KnowledgeView extends Div {
         personEntity = service.find(Person.class);
         personEntity.setName("edited out service");
         personLabel.setText(String.valueOf(personEntity));
+    }
+
+    private void onEditAllPersons(ClickEvent<Button> event) {
+        clean();
+        service.onEditAllPersons();
+    }
+
+    private void onEditAllPersonsBatch(ClickEvent<Button> event) {
+        clean();
+        service.onEditAllPersonsBatch();
     }
 
     private void onMergePersonAll(ClickEvent<Button> event) {

@@ -50,7 +50,7 @@ public class UserConfiguration {
         return projectConf; 
     }
 
-    @Transactional // TODO: nerozumiem na co to tu je
+    @Transactional
     public <T> T save(T entity) {
         return service.save(entity);
     }

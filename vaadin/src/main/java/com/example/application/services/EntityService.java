@@ -1,5 +1,6 @@
 package com.example.application.services;
 
+import java.time.LocalTime;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -114,5 +115,20 @@ public class EntityService {
     @Transactional
     public void run(Runnable runnable) {
         runnable.run();
+    }
+
+    @Transactional
+    public void onEditAllPersons() {
+        List<Person> persons = findAll(Person.class);
+        persons.forEach(p -> p.setName(randomText()));
+    }
+
+    @Transactional
+    public void onEditAllPersonsBatch() {
+        // TODO: onEditAllPersons with batch
+    }
+
+    private String randomText() {
+        return LocalTime.now().toString();
     }
 }

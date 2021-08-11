@@ -1,21 +1,17 @@
 package com.example.application.views.editor;
 
+import java.beans.PropertyDescriptor;
+import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+import javax.persistence.Entity;
 import com.example.application.services.EntityService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
-import com.vaadin.flow.data.binder.ValidationResult;
-import com.vaadin.flow.data.binder.Validator;
-import com.vaadin.flow.data.binder.Binder.BindingBuilder;
-
-import javax.persistence.Entity;
-import java.beans.PropertyDescriptor;
-import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Deprecated
 public class FieldBuilderFactory {

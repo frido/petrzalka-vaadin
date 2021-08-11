@@ -17,9 +17,9 @@ import com.vaadin.flow.data.binder.ValidationException;
 
 public class EntityView2<E> extends Div {
 
-    private transient final UIFactory<E> gridConfig;
+    private final transient UIFactory<E> gridConfig;
     BeanValidationBinder<E> binder;
-    private Grid<?> grid;
+    private Grid<E> grid;
     private Button cancel = new Button("Cancel");
     private Button save = new Button("Save");
 
@@ -39,7 +39,7 @@ public class EntityView2<E> extends Div {
         grid.setHeightFull();
         grid.asSingleSelect().addValueChangeListener(event -> {
             if (event.getValue() != null) {
-                selectItem((E) event.getValue());
+                selectItem(event.getValue());
             } else {
                 clearForm();
             }
