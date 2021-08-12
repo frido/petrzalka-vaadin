@@ -15,14 +15,8 @@
             "name": "Launch Application",
             "request": "launch",
             "mainClass": "com.example.application.Application",
-            "projectName": "vaadin"
-        },
-        {
-            "type": "java",
-            "name": "Launch GridConfig",
-            "request": "launch",
-            "mainClass": "com.example.application.views.about.GridConfig",
-            "projectName": "vaadin"
+            "projectName": "vaadin",
+            "console": "internalConsole"
         }
     ]
 }

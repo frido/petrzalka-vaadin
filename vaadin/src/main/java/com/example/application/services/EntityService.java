@@ -2,7 +2,7 @@ package com.example.application.services;
 
 import java.time.LocalTime;
 import java.util.List;
-
+import java.util.function.Consumer;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
@@ -18,7 +18,7 @@ import com.example.application.knowledge.PersonDto;
 import com.example.application.knowledge.PersonWithVersion;
 import com.example.application.knowledge.Person_;
 import com.example.application.petrzalka.page.budget.Budget;
-
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -123,9 +123,21 @@ public class EntityService {
         persons.forEach(p -> p.setName(randomText()));
     }
 
+    public void runBatch(Runnable runnable, int batchSize) {
+        var hibernateSession = em.unwrap(Session.class);
+        Integer oldBatchSize = hibernateSession.getJdbcBatchSize();
+        try {
+          hibernateSession.setJdbcBatchSize(batchSize);
+          runnable.run();
+          hibernateSession.flush();
+        } finally {
+          hibernateSession.setJdbcBatchSize(oldBatchSize);
+        }
+      }
+
     @Transactional
     public void onEditAllPersonsBatch() {
-        // TODO: onEditAllPersons with batch
+        runBatch(this::onEditAllPersons, 100);
     }
 
     private String randomText() {

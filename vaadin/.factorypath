@@ -58,6 +58,7 @@
     <factorypathentry kind="VARJAR" id="M2_REPO/com/vaadin/vaadin-crud-flow/14.6.1/vaadin-crud-flow-14.6.1.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/com/vaadin/vaadin-grid-pro-flow/14.6.1/vaadin-grid-pro-flow-14.6.1.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/com/vaadin/vaadin-rich-text-editor-flow/14.6.1/vaadin-rich-text-editor-flow-14.6.1.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/net/ttddyy/datasource-proxy/1.7/datasource-proxy-1.7.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/com/vaadin/vaadin-spring-boot-starter/14.6.1/vaadin-spring-boot-starter-14.6.1.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/com/vaadin/vaadin-spring/12.4.0/vaadin-spring-12.4.0.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/springframework/spring-webmvc/5.3.6/spring-webmvc-5.3.6.jar" enabled="true" runInBatchMode="false"/>
