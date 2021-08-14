@@ -5,7 +5,8 @@ import java.util.Properties;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 import javax.sql.DataSource;
-
+import com.example.application.knowledge.CustomEventListenerIntegrator;
+import com.example.application.knowledge.CustomIntegratorProvider;
 import com.example.application.knowledge.CustomInterceptorImpl;
 import com.example.application.knowledge.CustomStatisticsImpl;
 import com.example.application.knowledge.InlineQueryLogEntryCreator;
@@ -84,6 +85,7 @@ public class AppConfig {
         properties.put("hibernate.order_inserts", "true");
         properties.put("hibernate.order_updates", "true");
         properties.put("hibernate.generate_statistics", "true");
+        properties.put("hibernate.integrator_provider", new CustomIntegratorProvider());
         entityManagerFactoryBean.setJpaProperties(properties);
 
         return entityManagerFactoryBean;

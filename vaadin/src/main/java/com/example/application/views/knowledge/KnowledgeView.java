@@ -74,7 +74,7 @@ public class KnowledgeView extends Div {
         merge4.add(editAllPersons, editAllPersonsBatch);
         buttonPanel.add(merge1, personWithVersionLabel, merge2, merge3, merge4);
 
-        // TODO: spring properties show_sql, hibernate_statistics, batch_size
+        // TODO: FlushEntityEventListener a dalsi podobne implementovat
         // TODO: why more entity managers, preco ma ten v pm1 meno a cim sa lisi od ostatnycb
         // TODO: transaction isolation, sesions (httpSession, VaadinSession, SpringSession)?
         // TODO: splitnut projekt na generovanie a knowledge
