@@ -13,24 +13,28 @@ public class CustomStatisticsImpl extends StatisticsImpl {
     }
 
     private void add(String method, String hql, int rows, long time) {
-        add(method + ": " + hql + ": " + rows + " : " + time);
+        add(method, hql + ": " + rows + " : " + time);
     }
 
     private void add(String method, NavigableRole msg, String detail) {
-        add(method + ": " + msg.getNavigableName() + ": " + detail);
+        add(method, msg.getNavigableName() + ": " + detail);
     }
 
     private void add(String method, String msg, String detail) {
-        add(method + ": " + msg + ": " + detail);
+        add(method, msg + ": " + detail);
     }
 
     private void add(String method, String msg) {
-        add(method + ": " + msg);
+        queue.add("CustomStatisticsImpl", method, msg);
     }
 
-    private void add(String msg) {
-        queue.add(msg);
+    private void add(String method) {
+        queue.add("CustomStatisticsImpl", method, null);
     }
+
+    // private void add(String msg) {
+    //     queue.add(msg);
+    // }
 
     @Override
     public void updateCollection(String role) {

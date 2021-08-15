@@ -1,8 +1,11 @@
 package com.example.application.views.knowledge;
 
 import java.time.LocalTime;
-
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import com.example.application.knowledge.Department;
+import com.example.application.knowledge.EventRow;
 import com.example.application.knowledge.MessageQueue;
 import com.example.application.knowledge.Person;
 import com.example.application.knowledge.PersonWithVersion;
@@ -10,12 +13,15 @@ import com.example.application.knowledge.Team;
 import com.example.application.services.EntityService;
 import com.example.application.views.main.MainView;
 import com.vaadin.flow.component.ClickEvent;
+import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.renderer.TemplateRenderer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
@@ -36,6 +42,9 @@ public class KnowledgeView extends Div {
     private Label personWithVersionLabel = new Label();
     private Label departmentLabel = new Label();
     private Label teamLabel = new Label();
+
+    Grid<EventRow> grid = new Grid<>(EventRow.class);
+    List<EventRow> items = new ArrayList<>();
 
     public KnowledgeView(@Autowired EntityService service) { 
         this.service = service;
@@ -91,10 +100,29 @@ public class KnowledgeView extends Div {
         infoPanel.setSpacing(false);
 
         var main = new HorizontalLayout();
+        buttonPanel.setWidth(500, Unit.PIXELS);
         main.add(buttonPanel, infoPanel);
         add(main);
 
-        messageQueue.addListener(x -> infoPanel.addComponentAtIndex(0, new Label(x)));
+        grid.setColumns("id", "object", "method");
+        grid.getColumns().forEach(x -> x.setAutoWidth(true));
+        grid.setSelectionMode(Grid.SelectionMode.NONE);
+        grid.setItemDetailsRenderer(TemplateRenderer.<EventRow>of("[[item.payload]]").withProperty("payload", EventRow::getPayload));
+        // List<EventRow> items = Arrays.asList(
+        //     new EventRow(1, "KnowledgeView", "testMethod", String.valueOf(this)),
+        //     new EventRow(2, "KnowledgeView", "testMethod", String.valueOf(this))
+        // );
+        // grid.setItems(items);
+        infoPanel.add(grid);
+
+        messageQueue.addListener(this::onNewMessage);
+    }
+
+    private void onNewMessage(EventRow event) {
+        // infoPanel.addComponentAtIndex(0, new Label(x));
+        items.add(0, event);
+        grid.setItems(items);
+        grid.getDataProvider().refreshAll();
     }
 
     private void onLoadPerson(ClickEvent<Button> event) {

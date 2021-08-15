@@ -1,11 +1,9 @@
 package com.example.application;
 
 import java.util.Properties;
-
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 import javax.sql.DataSource;
-import com.example.application.knowledge.CustomEventListenerIntegrator;
 import com.example.application.knowledge.CustomIntegratorProvider;
 import com.example.application.knowledge.CustomInterceptorImpl;
 import com.example.application.knowledge.CustomStatisticsImpl;
@@ -13,7 +11,6 @@ import com.example.application.knowledge.InlineQueryLogEntryCreator;
 import com.example.application.knowledge.MessageQueue;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.jpa.HibernatePersistenceProvider;
-import org.hibernate.stat.internal.StatisticsImpl;
 import org.hibernate.stat.spi.StatisticsFactory;
 import org.hibernate.stat.spi.StatisticsImplementor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -127,12 +124,12 @@ public class AppConfig {
     
             @Override
             public void sessionCreated(HttpSessionEvent hse) {
-                messageQueue.add("Http Session created" + hse.getSession());
+                messageQueue.add("HttpSessionListener", "sessionCreated", String.valueOf(hse));
             }
         
             @Override
             public void sessionDestroyed(HttpSessionEvent hse) {
-                messageQueue.add("Http Session destroyed");
+                messageQueue.add("HttpSessionListener", "sessionDestroyed", String.valueOf(hse));
             }
             
         };

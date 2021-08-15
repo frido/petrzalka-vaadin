@@ -11,8 +11,8 @@ public class MessageQueue {
 
     private AtomicInteger counter = new AtomicInteger(0);
     private static MessageQueue INSTANCE;
-    private LinkedBlockingQueue<String> queue = new LinkedBlockingQueue<>();
-    private List<Consumer<String>> listeners = new ArrayList<>();
+    private LinkedBlockingQueue<EventRow> queue = new LinkedBlockingQueue<>();
+    private List<Consumer<EventRow>> listeners = new ArrayList<>();
 
     public static synchronized MessageQueue getInstance() {
         if (INSTANCE == null) {
@@ -21,29 +21,26 @@ public class MessageQueue {
         return INSTANCE;
     }
 
-    public List<String> poolAll() {
-        List<String> list = new ArrayList<>();
-        queue.forEach(list::add);
-        queue.clear();
-        list.add("------------------");
-        Collections.reverse(list);
-        return list;
+    // public List<EventRow> poolAll() {
+    //     List<EventRow> list = new ArrayList<>();
+    //     queue.forEach(list::add);
+    //     queue.clear();
+    //     Collections.reverse(list);
+    //     return list;
+    // }
+
+    public void add(String object, String method, String payload) {
+        EventRow event = new EventRow(counter.getAndIncrement(), object, method, payload);
+        callListeners(event);
     }
 
-    public void add(String msg) {
-        int i = counter.getAndIncrement();
-        var text = i + " - " + msg;
-        queue.add(text);
-        callListeners(text);
-    }
-
-    private void callListeners(String text) {
-        for (Consumer<String> consumer : listeners) {
+    private void callListeners(EventRow text) {
+        for (Consumer<EventRow> consumer : listeners) {
             consumer.accept(text);
         }
     }
 
-    public void addListener(Consumer<String> listener) {
+    public void addListener(Consumer<EventRow> listener) {
         queue.forEach(listener);
         this.listeners.add(listener);
     }

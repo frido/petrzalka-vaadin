@@ -100,7 +100,7 @@ PostCollectionUpdateEventListener
     private transient MessageQueue queue = MessageQueue.getInstance(); 
 
     private void add(String method, Object event) {
-        queue.add("CustomMergeEventListener-" + method + ": " + event);
+        queue.add("CustomMergeEventListener", method, String.valueOf(event));
     }
 
     @Override

@@ -74,8 +74,10 @@ public class EntityService {
     @Transactional
     public Person findPersonTree() {
         Person person = em.find(Person.class, 1);
-        MessageQueue.getInstance().add("findPersonTree - can load departnent: " + person.getDepartment());
-        MessageQueue.getInstance().add("findPersonTree - can load team: " + transactionalService.getTeamNameRequired(person));
+        person.getDepartment();
+        transactionalService.getTeamNameRequired(person);
+        // MessageQueue.getInstance().add("findPersonTree - can load departnent: " + person.getDepartment());
+        // MessageQueue.getInstance().add("findPersonTree - can load team: " + transactionalService.getTeamNameRequired(person));
         return person;
     }
 

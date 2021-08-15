@@ -17,7 +17,7 @@ public class InlineQueryLogEntryCreator extends DefaultQueryLogEntryCreator {
     public String getLogEntry(ExecutionInfo execInfo, List<QueryInfo> queryInfoList,
             boolean writeDataSourceName, boolean writeConnectionId) {
         String logEntry = super.getLogEntry(execInfo, queryInfoList, writeDataSourceName, writeConnectionId);
-        queue.add("getLogEntry: " + logEntry);
+        queue.add("InlineQueryLogEntryCreator", "getLogEntry", logEntry);
         return logEntry;
     }
 
