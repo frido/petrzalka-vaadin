@@ -21,6 +21,10 @@ import com.example.application.petrzalka.page.budget.Budget;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 @Service
 public class EntityService {
@@ -30,6 +34,9 @@ public class EntityService {
 
     @Autowired
     TransactionalService transactionalService;
+
+    @Autowired
+    private PlatformTransactionManager transactionManager;
 
     public EntityManager getEm() {
         return em;
@@ -49,7 +56,7 @@ public class EntityService {
         return allQuery.getResultList();
     }
 
-    @Transactional
+    // @Transactional
     public <T> T find(Class<T> clazz) {
         return em.find(clazz, 1);
     }
@@ -144,5 +151,32 @@ public class EntityService {
 
     private String randomText() {
         return LocalTime.now().toString();
+    }
+
+    // TODO: propagation, pridat propagacne logy aby user vecer co sa deje
+    public void testing() {
+        DefaultTransactionDefinition definition = new DefaultTransactionDefinition();
+        definition.setIsolationLevel(TransactionDefinition.ISOLATION_REPEATABLE_READ);
+        definition.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED); // TODO: prepinatelne ako parameter
+        definition.setTimeout(3);
+        TransactionStatus status1 = transactionManager.getTransaction(definition);
+        var person1 = em.find(Person.class, 1);
+        person1.setName("changed in 1 transaction");
+        
+        TransactionStatus status2 = transactionManager.getTransaction(definition);
+        var person2 = em.find(Person.class, 1);
+        person2.setName("changed in 2 transaction");
+
+        transactionManager.commit(status2);
+        var person3 = em.find(Person.class, 1);
+        System.out.println(person3);
+
+        transactionManager.commit(status1);
+    }
+
+    private Person findAndEdit2() {
+        var person = em.find(Person.class, 1);
+        person.setName("edited in service");
+        return person;
     }
 }

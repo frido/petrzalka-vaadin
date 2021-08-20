@@ -4,6 +4,8 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import com.example.application.knowledge.Department;
 import com.example.application.knowledge.EventRow;
 import com.example.application.knowledge.MessageQueue;
@@ -14,7 +16,10 @@ import com.example.application.services.EntityService;
 import com.example.application.views.main.MainView;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.AbstractField.ComponentValueChangeEvent;
+import com.vaadin.flow.component.HasValue.ValueChangeListener;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
@@ -45,6 +50,7 @@ public class KnowledgeView extends Div {
 
     Grid<EventRow> grid = new Grid<>(EventRow.class);
     List<EventRow> items = new ArrayList<>();
+    ComboBox<String> eventFilter = new ComboBox<>();
 
     public KnowledgeView(@Autowired EntityService service) { 
         this.service = service;
@@ -76,16 +82,21 @@ public class KnowledgeView extends Div {
         var editPersonInServiceBtn = new Button("Edit Person In Service", this::onEditPersonInService);
         var editPersonOutServiceBtn = new Button("Edit Person Out Service", this::onEditPersonOutService);
         var editAllPersons = new Button("Edit All Persons", this::onEditAllPersons);
-        var editAllPersonsBatch = new Button("Edit All Persons Batch", this::onEditAllPersonsBatch);
+        var editAllPersonsBatch = new Button("Edit All Persons Batch", this::onEditAllPersonsBatch); // TODO configurable batch size
+
+        var testing = new Button("Testing", this::testing);
+
         merge1.add(mergePersonBtn, mergePersonAllBtn, mergePersonDtoBtn);
         merge2.add(loadPersonVersionBtn, changePersonVersionBtn, mergePersonVersionBtn);
         merge3.add(editPersonInServiceBtn, editPersonOutServiceBtn);
         merge4.add(editAllPersons, editAllPersonsBatch);
-        buttonPanel.add(merge1, personWithVersionLabel, merge2, merge3, merge4);
+        buttonPanel.add(merge1, personWithVersionLabel, merge2, merge3, merge4, testing);
 
-        // TODO: FlushEntityEventListener a dalsi podobne implementovat
-        // TODO: why more entity managers, preco ma ten v pm1 meno a cim sa lisi od ostatnycb
-        // TODO: transaction isolation, sesions (httpSession, VaadinSession, SpringSession)?
+        // TODO: zapinanie vypynanie riadkov v info panel
+        // Lepsi posis detailov v gride
+        // Loading class `com.mysql.jdbc.Driver'. This is deprecated. The new driver class is `com.mysql.cj.jdbc.Driver'. The driver is automatically registered via the SPI and manual loading of the driver class is generally unnecessary.
+        // TODO: transaction isolation, sesions 
+        // TODO: httpSession, VaadinSession, SpringSession?
         // TODO: splitnut projekt na generovanie a knowledge
         // TODO: kde sa inicializuje VaadinServlet?
         // TODO: ine formy optimistic lock (version) rieseni
@@ -113,16 +124,28 @@ public class KnowledgeView extends Div {
         //     new EventRow(2, "KnowledgeView", "testMethod", String.valueOf(this))
         // );
         // grid.setItems(items);
-        infoPanel.add(grid);
+        infoPanel.add(eventFilter, grid);
+
+        eventFilter.addValueChangeListener(x -> {
+            grid.setItems(items.stream().filter(i -> i.getObject().compareTo(x.getValue()) == 0).collect(Collectors.toList()));
+            grid.getDataProvider().refreshAll();
+        });
 
         messageQueue.addListener(this::onNewMessage);
     }
 
     private void onNewMessage(EventRow event) {
-        // infoPanel.addComponentAtIndex(0, new Label(x));
         items.add(0, event);
+
+        Set<String> objects = items.stream().map(o -> o.getObject()).collect(Collectors.toSet());
+        eventFilter.setItems(objects);
+
         grid.setItems(items);
         grid.getDataProvider().refreshAll();
+    }
+
+    private void testing(ClickEvent<Button> event) {
+        service.testing();
     }
 
     private void onLoadPerson(ClickEvent<Button> event) {

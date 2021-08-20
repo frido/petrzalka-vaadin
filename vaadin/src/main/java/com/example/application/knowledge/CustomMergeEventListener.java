@@ -235,7 +235,10 @@ PostCollectionUpdateEventListener
 
     @Override
     public void onFlush(FlushEvent event) throws HibernateException {
-        add("onFlush", event);
+        EventHolder eh = new EventHolder();
+        eh.add("getNumberOfCollectionsProcessed", event.getNumberOfCollectionsProcessed());
+        eh.add("getNumberOfEntitiesProcessed", event.getNumberOfEntitiesProcessed());
+        add("onFlush", eh);
         
     }
 
