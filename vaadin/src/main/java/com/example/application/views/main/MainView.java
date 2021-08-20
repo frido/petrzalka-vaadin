@@ -15,6 +15,7 @@ import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.TabVariant;
 import com.vaadin.flow.component.tabs.Tabs;
@@ -27,6 +28,7 @@ import com.vaadin.flow.theme.Theme;
  */
 @PWA(name = "My App", shortName = "My App", enableInstallPrompt = false)
 @Theme(themeFolder = "myapp")
+@Push
 public class MainView extends AppLayout {
 
     private final Tabs menu;

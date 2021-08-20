@@ -179,4 +179,26 @@ public class EntityService {
         person.setName("edited in service");
         return person;
     }
+
+    public void testing2() throws InterruptedException {
+        DefaultTransactionDefinition definition = new DefaultTransactionDefinition();
+        definition.setIsolationLevel(TransactionDefinition.ISOLATION_READ_UNCOMMITTED);
+        definition.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW); // TODO: prepinatelne ako parameter
+        TransactionStatus status1 = transactionManager.getTransaction(definition);
+        var person1 = em.find(Person.class, 1);
+        person1.setName("XXX");
+        em.flush();
+        Thread.sleep(30000);
+        transactionManager.commit(status1);
+    }
+
+    public Person testing3() {
+        DefaultTransactionDefinition definition = new DefaultTransactionDefinition();
+        definition.setIsolationLevel(TransactionDefinition.ISOLATION_READ_COMMITTED);
+        definition.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW); // TODO: prepinatelne ako parameter
+        TransactionStatus status1 = transactionManager.getTransaction(definition);
+        var person1 = em.find(Person.class, 1);
+        transactionManager.commit(status1);
+        return person1;
+    }
 }

@@ -14,7 +14,9 @@ import com.example.application.knowledge.PersonWithVersion;
 import com.example.application.knowledge.Team;
 import com.example.application.services.EntityService;
 import com.example.application.views.main.MainView;
+import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.ClickEvent;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.AbstractField.ComponentValueChangeEvent;
 import com.vaadin.flow.component.HasValue.ValueChangeListener;
@@ -26,6 +28,7 @@ import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.data.renderer.TemplateRenderer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -47,15 +50,17 @@ public class KnowledgeView extends Div {
     private Label personWithVersionLabel = new Label();
     private Label departmentLabel = new Label();
     private Label teamLabel = new Label();
+    private VerticalLayout buttonPanel;
 
     Grid<EventRow> grid = new Grid<>(EventRow.class);
     List<EventRow> items = new ArrayList<>();
     ComboBox<String> eventFilter = new ComboBox<>();
+    private UI ui;
 
     public KnowledgeView(@Autowired EntityService service) { 
         this.service = service;
 
-        var buttonPanel = new VerticalLayout();
+        buttonPanel = new VerticalLayout();
         buttonPanel.add(personLabel, departmentLabel, teamLabel);
         
         var person1 = new HorizontalLayout();
@@ -92,10 +97,10 @@ public class KnowledgeView extends Div {
         merge4.add(editAllPersons, editAllPersonsBatch);
         buttonPanel.add(merge1, personWithVersionLabel, merge2, merge3, merge4, testing);
 
-        // TODO: zapinanie vypynanie riadkov v info panel
-        // Lepsi posis detailov v gride
-        // Loading class `com.mysql.jdbc.Driver'. This is deprecated. The new driver class is `com.mysql.cj.jdbc.Driver'. The driver is automatically registered via the SPI and manual loading of the driver class is generally unnecessary.
+
         // TODO: transaction isolation, sesions 
+        // TODO: Lepsi popis detailov v gride
+        // TODO: Loading class `com.mysql.jdbc.Driver'. This is deprecated. The new driver class is `com.mysql.cj.jdbc.Driver'. The driver is automatically registered via the SPI and manual loading of the driver class is generally unnecessary.
         // TODO: httpSession, VaadinSession, SpringSession?
         // TODO: splitnut projekt na generovanie a knowledge
         // TODO: kde sa inicializuje VaadinServlet?
@@ -119,11 +124,6 @@ public class KnowledgeView extends Div {
         grid.getColumns().forEach(x -> x.setAutoWidth(true));
         grid.setSelectionMode(Grid.SelectionMode.NONE);
         grid.setItemDetailsRenderer(TemplateRenderer.<EventRow>of("[[item.payload]]").withProperty("payload", EventRow::getPayload));
-        // List<EventRow> items = Arrays.asList(
-        //     new EventRow(1, "KnowledgeView", "testMethod", String.valueOf(this)),
-        //     new EventRow(2, "KnowledgeView", "testMethod", String.valueOf(this))
-        // );
-        // grid.setItems(items);
         infoPanel.add(eventFilter, grid);
 
         eventFilter.addValueChangeListener(x -> {
@@ -132,16 +132,54 @@ public class KnowledgeView extends Div {
         });
 
         messageQueue.addListener(this::onNewMessage);
+
+        Button tBtn = new Button("Thread");
+
+        tBtn.addClickListener( x -> {
+            new Thread(new Runnable(){
+
+                private int count = 0;
+    
+                @Override
+                public void run() {
+                    ui.access(() -> {
+                        System.out.println("---------->" + 0);
+                        tBtn.setEnabled(false);
+                    });
+                    System.out.println("---------->" + 1);
+                    try {
+                        service.testing2();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    count++;
+                    ui.access(() -> {
+                        System.out.println("---------->" + 4);
+                        tBtn.setEnabled(true);
+                    });
+                }
+            }).start();
+        });
+        buttonPanel.add(tBtn);
+    }
+
+    @Override
+    protected void onAttach(AttachEvent attachEvent) {
+        ui = attachEvent.getUI();
     }
 
     private void onNewMessage(EventRow event) {
-        items.add(0, event);
+        ui.access(() -> {
+            System.out.println("---------->" + 2);
+            items.add(0, event);
 
-        Set<String> objects = items.stream().map(o -> o.getObject()).collect(Collectors.toSet());
-        eventFilter.setItems(objects);
+            Set<String> objects = items.stream().map(o -> o.getObject()).collect(Collectors.toSet());
+            eventFilter.setItems(objects);
 
-        grid.setItems(items);
-        grid.getDataProvider().refreshAll();
+            grid.setItems(items);
+            grid.getDataProvider().refreshAll();
+            System.out.println("---------->" + 3);
+        });
     }
 
     private void testing(ClickEvent<Button> event) {
@@ -150,7 +188,8 @@ public class KnowledgeView extends Div {
 
     private void onLoadPerson(ClickEvent<Button> event) {
         clean();
-        personEntity = service.find(Person.class);
+        // personEntity = service.find(Person.class);
+        personEntity = service.testing3();
         personLabel.setText(String.valueOf(personEntity));
     }
 
