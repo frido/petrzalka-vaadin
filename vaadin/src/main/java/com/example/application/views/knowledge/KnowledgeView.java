@@ -97,20 +97,6 @@ public class KnowledgeView extends Div {
         merge4.add(editAllPersons, editAllPersonsBatch);
         buttonPanel.add(merge1, personWithVersionLabel, merge2, merge3, merge4, testing);
 
-
-        // TODO: transaction isolation, sesions 
-        // TODO: Lepsi popis detailov v gride
-        // TODO: Loading class `com.mysql.jdbc.Driver'. This is deprecated. The new driver class is `com.mysql.cj.jdbc.Driver'. The driver is automatically registered via the SPI and manual loading of the driver class is generally unnecessary.
-        // TODO: httpSession, VaadinSession, SpringSession?
-        // TODO: splitnut projekt na generovanie a knowledge
-        // TODO: kde sa inicializuje VaadinServlet?
-        // TODO: ine formy optimistic lock (version) rieseni
-        // TODO: java packages dependency grapgh
-        // TODO: routing stranok
-        // TODO: Authorizacia usera
-        // TODO: Cachovanie master data, alebo cokolvek ine
-        // TODO: Genericke filtrovanie/sortovanie gridov
-
         infoPanel = new VerticalLayout();
         infoPanel.setPadding(false);
         infoPanel.setSpacing(false);
