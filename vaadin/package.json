@@ -46,6 +46,7 @@
     "@vaadin/vaadin-time-picker": "2.4.0",
     "@vaadin/vaadin-upload": "4.4.1",
     "@webcomponents/webcomponentsjs": "^2.2.10",
+    "bootstrap": "^5.1.3",
     "lit-element": "2.5.1",
     "lit-html": "1.4.1",
     "lumo-css-framework": "^3.0.11"
@@ -137,6 +138,6 @@
       "construct-style-sheets-polyfill": "2.4.6",
       "extract-loader": "5.1.0"
     },
-    "hash": "ee41b5f52358e5c90c5655e40455b1079f03fbbe0075fde5599b7e3db140dbe6"
+    "hash": "2db81a36c4550a01bc7aacdce92b88e8080a45c8f191170b6ecb276e0ef6889d"
   }
 }

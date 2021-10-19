@@ -1,0 +1,20 @@
+@mixin timeline($color) {
+    border-left: solid 10px $color;
+
+    .description {
+        
+        color: $color;
+    }
+    .subheader {
+        color: $color;
+    }
+}
+
+@mixin budget($color) {
+    border-left: solid 10px $color;
+
+    .status-box {
+        color: $color;
+    }
+    
+}

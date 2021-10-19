@@ -1,0 +1,66 @@
+@mixin palette($background-section, $background-article, $title-section, $title-article, $paragraph, $secondary, $secondary-text, $tertiary, $tertiary-text) {
+    background-color: $background-section;
+    color: $paragraph;
+
+    &.logo {
+        background-color: $background-section;
+        h1, a, a:hover {
+            color: white;
+        }
+    }
+    section {
+        header {
+            h1 {
+                color: $title-section;
+            }
+        }   
+    }
+    article {
+        background-color: $background-article;
+        h1, h2, h3, h4, h5, h6 {
+            color: $title-article;
+        }
+    }
+    article[class~="container"] {
+        background-color: $background-section;
+        h1, h2, h3, h4, h5, h6 {
+            color: $title-section;
+        }
+    }
+    footer {
+        background-color: $background-section;
+        color: $title-section;
+    }
+    
+    strong {
+        // color: $secondary;
+    }
+
+    div.button {
+        & > a {
+            background-color: $secondary;
+            color: $secondary-text;
+        }
+    }
+
+    .amount {
+        border: solid 1px $tertiary;
+        color: $paragraph;
+    }
+    
+    .schedule, .updated {
+        color: $secondary;
+    }
+
+    .point {
+        border-left: 1px $tertiary solid;
+        .point-mark {
+            border: solid 5px $tertiary;
+            background: $tertiary-text;
+        }
+        .point-date {
+            color: $tertiary; 
+        }
+    }
+    
+}

@@ -6,69 +6,68 @@ import com.example.application.petrzalka.page.project.ProjectStatus;
 
 public class ArticleBudgetComponent extends HtmlTag {
 
-    private final BudgetProject project;
-    private final int year;
+  private final BudgetProject project;
+  private final int year;
 
-    public ArticleBudgetComponent(BudgetProject project, int year) {
-        super("div");
-        this.project = project;
-        this.year = year;
+  public ArticleBudgetComponent(BudgetProject project, int year) {
+    super("div");
+    this.project = project;
+    this.year = year;
+  }
+
+  @Override
+  public String toString() {
+    addContent(article());
+    return super.toString();
+  }
+
+  private HtmlTag article() {
+    HtmlTag article = new HtmlTag("article");
+    article.clazz("box").clazz(ProjectStatus.INWORK.clazz());
+    Row row = (Row) article.createContent(new Row());
+    row.column("col-md-10").createContent(new H(3)).with(project.getTitle());
+    row.column("col-md-2 text-right").with(statusText(Amount.of(project.getAmountAll()), ProjectStatus.INWORK.clazz()));
+    article.createContent(budget());
+    return article;
+  }
+
+  private HtmlTag budget() {
+    Div budgetRow = new Div("budget-list");
+    for (Integer projectYear : project.getYears()) {
+      HtmlTag row = budgetRow.createContent(new Div("budget-row"));
+      Row yearRow = (Row) row.createContent(new Row());
+      yearRow.clazz("budget-item-year");
+      yearRow.column("col-md-10").createContent(new H(4)).with("v roku " + projectYear);
+      yearRow.column("col-md-2 text-right")
+          .with(statusText(Amount.of(project.getAmount(projectYear)), getStatusClass(project.isAnyInWork(projectYear))));
+
+      project.getBudgets(projectYear).forEach(i -> row.with(budgetItem(i)));
+
     }
+    return budgetRow;
+  }
 
-    @Override
-    public String toString() {
-        addContent(article());
-        return super.toString();
+  private String getStatusClass(boolean isAnyInWork) {
+    return isAnyInWork ? ProjectStatus.INWORK.clazz() : ProjectStatus.DONE.clazz();
+  }
+
+  private HtmlTag budgetItem(Budget i) {
+    Row budgetItemRow = new Row();
+    budgetItemRow.clazz("budget-item");
+    budgetItemRow.column("col-md-10").with(i.getTitle());
+    budgetItemRow.column("col-md-2 text-right").with(statusText(Amount.of(i.getAmount()), getProjectStatus(i)));
+    if (i.getShowComment() && false) {
+      budgetItemRow.column("col-md-12").with(i.getComment()).clazz("muted");
     }
+    return budgetItemRow;
+  }
 
-    private HtmlTag article() {
-        HtmlTag article = new HtmlTag("article");
-        article.clazz("box").clazz(ProjectStatus.INWORK.clazz());
-        Row row = (Row) article.createContent(new Row());
-        row.column("col-md-10").createContent(new H(3)).with(project.getTitle());
-        row.column("col-md-2 text-right")
-                .with(statusText(Amount.of(project.getAmount(year)), ProjectStatus.INWORK.clazz()));
-        article.createContent(new Div("budget-list")).with(budget());
-        return article;
-    }
+  private String getProjectStatus(Budget budget) {
+    // return budget.getUseAmountReal() ? ProjectStatus.DONE.clazz() : ProjectStatus.INWORK.clazz();
+    return budget.getStatus().getClazz();
+  }
 
-    private HtmlTag budget() {
-        HtmlTag row = new Div("budget-row");
-        for (Integer projectYear : project.getYears()) {
-            Row budgetRow = (Row) row.createContent(new Row());
-            if (this.year != projectYear) {
-                budgetRow.clazz("small");
-            }
-            budgetRow.column("col-md-1").with(String.valueOf(year));
-            budgetRow.column("col-md-2").with(statusText(Amount.of(project.getAmount(year)), getProjectStatus(project, year)));
-            HtmlTag budgetList = budgetRow.column("col-md-9");
-            project.getBudgets(year).forEach(i -> budgetList.with(budgetItem(i)));
-
-        }
-        return row;
-    }
-
-    private HtmlTag budgetItem(Budget i) {
-        Row budgetItemRow = new Row();
-        budgetItemRow.column("col-md-12")
-                .with(i.getTitle())
-                .with(" - ")
-                .with(statusText(Amount.of(i.getAmount()), getProjectStatus(i)));
-        if(i.getShowComment()) {
-            budgetItemRow.column("col-md-12").with(i.getComment()).clazz("muted");
-        }
-        return budgetItemRow;
-    }
-
-    private String getProjectStatus(BudgetProject project, Integer yearBudget) {
-        return project.getBudgets(yearBudget).stream().allMatch(Budget::getUseAmountReal) ? ProjectStatus.DONE.clazz() : ProjectStatus.INWORK.clazz();
-    }
-
-    private String getProjectStatus(Budget budget) {
-        return budget.getUseAmountReal() ? ProjectStatus.DONE.clazz() : ProjectStatus.INWORK.clazz();
-    }
-
-    private HtmlTag statusText(String text, String clazz) {
-        return new Span("status-text", text).clazz(clazz);
-    }
+  private HtmlTag statusText(String text, String clazz) {
+    return new Span("status-text", text).clazz(clazz);
+  }
 }

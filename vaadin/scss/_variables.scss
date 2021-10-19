@@ -1,0 +1,26 @@
+// @import '_palette';
+// @import '_timeline';
+
+$color1: #232946;
+$color2: #fffffe;
+$color3: #9933CC;
+$color4: #0d47a1;
+
+$success: #00695c;
+$inwork: #0d47a1;
+$error: #CC0000;
+$pause: #9933CC;
+
+$green: $success;
+
+$timetable-border: $color3;
+
+@keyframes example {
+    0% {color: $color3;}
+    50% {color: $color4;}
+}
+
+@keyframes example2 {
+    0% {color: white;}
+    50% {color: $color3;}
+}

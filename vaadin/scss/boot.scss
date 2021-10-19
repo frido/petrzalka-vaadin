@@ -1,0 +1,462 @@
+// Layout & components
+// @import "root";
+// @import "reboot";
+// @import "type";
+// @import "images";
+// @import "containers";
+// @import "grid";
+// @import "tables";
+// @import "forms";
+// @import "buttons";
+// @import "transitions";
+// @import "dropdown";
+// @import "button-group";
+// @import "nav";
+// @import "navbar";
+// @import "card";
+// @import "breadcrumb";
+// @import "pagination";
+// @import "badge";
+// @import "alert";
+// @import "progress";
+// @import "list-group";
+// @import "close";
+// @import "toasts";
+// @import "modal";
+// @import "tooltip";
+// @import "popover";
+// @import "carousel";
+// @import "spinners";
+
+@import "../../node_modules/bootstrap/scss/functions";  
+@import "../../node_modules/bootstrap/scss/variables"; 
+@import "_variables";
+@import "../../node_modules/bootstrap/scss/mixins";
+@import "../../node_modules/bootstrap/scss/utilities";
+
+@import "../../node_modules/bootstrap/scss/root";
+@import "../../node_modules/bootstrap/scss/reboot";
+@import "../../node_modules/bootstrap/scss/type";
+@import "../../node_modules/bootstrap/scss/images";
+@import "../../node_modules/bootstrap/scss/containers";
+@import "../../node_modules/bootstrap/scss/grid";
+@import "../../node_modules/bootstrap/scss/nav";
+@import "../../node_modules/bootstrap/scss/navbar";
+@import "../../node_modules/bootstrap/scss/card";
+@import "../../node_modules/bootstrap/scss/progress"; 
+
+@import "_palette";
+@import "_timeline";
+@import "_fontawesome";
+
+.text-right {
+    text-align: right!important;
+}
+
+.text-center {
+    text-align: center!important; 
+}
+
+.text-success {
+    color: $success !important
+}
+.text-inwork {
+    color: $inwork !important
+}
+.text-error {
+    color: $error !important
+}
+.text-postpone {
+    color: $error !important
+}
+
+.bg-success {
+    background-color:$success !important;
+}
+.bg-inwork {
+    background-color: $inwork !important;
+}
+.bg-error {
+    background-color: $error !important;
+}
+.bg-postpone {
+    background-color: $error !important;
+}
+
+.grants-row {
+    display: flex;
+    padding-top: 1rem;
+    flex-wrap: wrap;
+    article {
+        text-align: center 
+    }
+    & > div {
+        padding: 1rem;
+        height: auto;
+        h2 {
+            width: 100%;
+            font-weight: 700;
+        }
+        article {
+            height: 100%;
+        }
+
+        &:first-child {
+            padding-left: 0;
+        }
+        &:last-child {
+            padding-right: 0;
+        }
+    }
+    &.c-4 > div {
+        @extend .col-md-3;
+    }
+    &.c-3 > div {
+        @extend .col-md-4;
+    }
+}
+
+nav {
+    margin-right: 1rem;
+    margin-bottom: 0;
+    margin-top: 0;
+
+    a {
+        padding: .5rem;
+    }
+}
+
+a {
+    color: $color1;
+}
+
+header.logo {
+    display: flex;  
+    padding-left: 1.5rem;
+    flex-direction: row;
+    background-image: linear-gradient(to right, $color4, $color3);
+    h1 {
+        color: $color2
+    }
+    a {
+        &:hover {
+            text-decoration: none;
+            animation-name: example2;
+            animation-duration: 4s;
+            animation-iteration-count: infinite;
+        }
+    }
+    img {
+        margin-right: 2rem;
+        height: 100px;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
+}
+
+// palette($background-section, $background-article, $title-section, $title-article, $paragraph, $secondary, $secondary-text, $tertiary, $tertiary-text) {
+
+.paletteA {
+    @include palette($color2, $color2, $color1, $color1, $color1, $color3, $color2, $color4, $color2);
+}
+
+.paletteB {
+    // @include palette($color1, $color2, $color1, $color1, $color1, $color4, $color1, $color4, $color1);
+    @include palette($color2, $color2, $color1, $color1, $color1, $color3, $color2, $color4, $color2);
+}
+
+.paletteC {
+    @include palette($color2, $color2, $color1, $color1, $color1, $color3, $color2, $color4, $color2);
+}
+
+.timeline.success {
+    @include timeline($success);
+}
+
+.timeline.inwork {
+    @include timeline($inwork);
+}
+
+.timeline.error {
+    @include timeline($error);
+}
+
+.timeline.postpone {
+    @include timeline($error);
+}
+
+.timeline.pause {
+    @include timeline($pause);
+}
+
+.budget.success {
+    @include budget($success);
+}
+
+.budget.inwork {
+    @include budget($inwork);
+}
+
+.budget.error {
+    @include budget($error);
+}
+
+.budget.postpone {
+    @include budget($error);
+}
+
+.budget.pause {
+    @include budget($pause);
+}
+
+
+
+
+body {
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    line-height: 1.6;
+    font-size: 1.2rem;
+    margin: 0;
+    -webkit-text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+section {
+    &.vertical {
+        article {
+            --bs-gutter-x: 1.5rem;
+            margin-top: var(--bs-gutter-x); 
+        }
+    }
+}
+
+article {
+    header {
+        h1 {
+            font-weight: 900; 
+        }
+    }
+    .progress {
+        height: 1px;
+        margin-bottom: 10px;
+    }
+    
+}
+
+figure {
+    margin: 1em 0;
+    img {
+        max-width: 100%;
+        height: auto;
+    }
+}
+
+a {
+    text-decoration: none;
+
+    &:hover {
+        text-decoration: none;
+        animation-name: example;
+        animation-duration: 4s;
+        animation-iteration-count: infinite;
+    }
+}
+
+.container {
+    padding-top: 3rem;
+}
+
+div.button {
+    text-align: center;
+    margin-top: 1rem;
+    padding-bottom: 1rem;
+    & > a {
+        font-weight: 700;
+        padding: 1rem;
+        display: inline-flex;
+    }
+}
+
+// article a section>article rozdelit by bolo jasne co je zobrazene v liste articlov a co je samostatny articel
+// potom mozem nastavit article shadow len na article v zozname (section)
+
+section article {
+    box-shadow: 0 3px 10px 0 rgba(0,0,0,0.05), 0 3px 10px 0 rgba(0,0,0,0.05);
+}
+
+img.preview {
+    max-height: 200px;
+}
+
+.article {
+    @extend .card;
+    @extend .card-body;
+    border: 0;
+
+    // header {
+    //     display: flex;
+    //     justify-content: space-between;
+    //     align-items: flex-start;
+    // }
+}
+
+.logo {
+    h1 {
+        font-size: 3.0rem;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        font-weight: 900 !important;
+    }
+}
+
+.pt-1 {
+    padding-top: 1rem;
+}
+
+.amount {
+    margin: 0 5px;
+    padding: 5px;
+    font-weight: 900;
+    padding-top: 3px;
+    margin-left: 0px;
+    border-radius: 0.25rem;
+}
+
+.gallery, 
+.content,
+.schedule,
+.updated,
+.budget,
+.sources {
+    padding-bottom: 1em;
+}
+
+.schedule-title {
+    font-weight: bold;
+}
+
+.point {
+    h2 {
+        display: inline-block;
+    }
+    .point-mark {
+        width: 20px;
+        min-width: 10px;
+        display: inline-block;
+        height: 20px;
+        border-radius: 5px;
+        left: -10px;
+        position: relative;
+        top: 3px;
+    }
+
+    .point-date {
+        padding-right: 10px;
+    }
+
+    .timeline-body {
+        margin-left: 1em;
+    }
+}
+
+.gallery {
+    display: flex;
+}
+
+.two-in-row {
+    width: 50%;
+}
+
+// .box-shadow {
+//     box-shadow: 0 3px 10px 0 rgba(0,0,0,0.05), 0 3px 10px 0 rgba(0,0,0,0.05);
+// }
+
+.palleteC {
+    margin-top: 1rem;
+}
+
+.timetable {
+    padding-bottom: 2rem;
+    .timeline {
+        padding: 0.3rem;
+        margin: 0.3rem;
+    }
+    
+}
+
+.timeline {
+    border-left: solid 10px $timetable-border;
+    // border-top: solid 2px $timetable-border;
+    // padding: 0;
+    // margin-top: 2rem;
+    // margin-left: 0;
+    // background-image: linear-gradient(to left top, rgba($timetable-border, 0) 50%, rgba($timetable-border, 0.1));
+    // box-shadow: 0 3px 10px 0 rgba(0,0,0,0.05), 0 3px 10px 0 rgba(0,0,0,0.05);
+    // padding-left: 1rem;
+    // padding-right: 1rem;
+
+    .description {
+        font-weight: 700;
+    }
+
+    .subheader {
+        font-size: 1.1rem;
+        // font-weight: 600;
+        padding-bottom: 1rem;
+    }
+
+    h3 {
+        font-weight: 600;
+    }
+}
+
+
+
+.timeline .header {
+    display: flex;
+    justify-content: space-between;
+
+}
+
+.timeline .date {
+    font-size: 1rem;
+}
+
+.timeline .dateExpected {
+    font-style: italic;
+}
+
+.timeline .timeline-sub {
+    .header {
+        display: flex;
+        -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+        justify-content: space-between;
+
+        img.source {
+            float: right;
+            height: 19px;
+            vertical-align: middle;
+            padding-top: 6px;
+            padding-left: 3px;
+        }
+    }
+
+    
+}
+
+.timeline .timeline-wrap-sub {
+    font-size: 1rem;
+    padding-left: 2rem;
+    // padding-top: 0rem;
+    // padding-bottom: 1rem;
+    // padding-left: 1rem;
+}
+
+.budget-parent-box {
+    border-top: solid #e2e2e2 1px;
+    padding-top: 0.5rem;
+    margin-top: 0.5rem;
+}

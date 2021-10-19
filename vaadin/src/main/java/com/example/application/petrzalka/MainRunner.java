@@ -19,34 +19,37 @@ import com.example.application.petrzalka.page.project.ProjectPage;
 import com.example.application.petrzalka.page.project.ProjectService;
 
 @Component
-public class MainRunner  {
+public class MainRunner {
 
-    @Autowired
-    BudgetService budgetService;
+  @Autowired
+  BudgetService budgetService;
 
-    @Autowired
-    GrantService grantService;
+  @Autowired
+  GrantService grantService;
 
-    @Autowired
-    ProjectService projectService;
+  @Autowired
+  ProjectService projectService;
 
-    public void run(Configuration config) throws Exception {
-        System.out.println("It Works!");
+  public void run(Configuration config) throws Exception {
+    System.out.println("It Works!");
 
-        PageWriter pw = new PageWriter(config);
-        pw.write(new IndexPage(config, budgetService, grantService, projectService));
-        pw.write(new ProjectPage(config, projectService));
-        pw.write(new GrantPage(config, grantService));
-        pw.write(new BudgetPage(config, budgetService));
-        projectsPageGenerator(config).forEach(pw::write);
-        budgetPageGenerator(config, List.of(2020, 2021)).forEach(pw::write);
-    }
+    PageWriter pw = new PageWriter(config);
+    pw.write(new IndexPage(config, budgetService, grantService, projectService));
+    pw.write(new ProjectPage(config, projectService));
+    pw.write(new GrantPage(config, grantService));
+    pw.write(new BudgetPage(config, budgetService));
+    projectsPageGenerator(config).forEach(pw::write);
+    budgetPageGenerator(config, List.of(2020, 2021)).forEach(pw::write);
+    pw.write(new BudgetDetailPage(config, null, budgetService.getAllBudgetProjects()));
+  }
 
-    private List<Page> budgetPageGenerator(Configuration config, List<Integer> years) {
-        return years.stream().map(year -> new BudgetDetailPage(config, year, budgetService.getBudgetProject(year))).collect(Collectors.toList());
-    }
+  private List<Page> budgetPageGenerator(Configuration config, List<Integer> years) {
+    return years.stream().map(year -> new BudgetDetailPage(config, year, budgetService.getAllBudgetProjects()))
+        .collect(Collectors.toList());
+  }
 
-    private List<Page> projectsPageGenerator(Configuration config) {
-        return projectService.getAllProjects().stream().map(p -> new ProjectDetailPage(config, p)).collect(Collectors.toList());
-    }
+  private List<Page> projectsPageGenerator(Configuration config) {
+    return projectService.getAllProjects().stream().map(p -> new ProjectDetailPage(config, p))
+        .collect(Collectors.toList());
+  }
 }
