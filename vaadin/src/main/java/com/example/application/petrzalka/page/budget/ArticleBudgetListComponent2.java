@@ -8,22 +8,21 @@ import com.example.application.petrzalka.html.HtmlTag;
 
 public class ArticleBudgetListComponent2 extends HtmlTag {
 
-    private final List<BudgetProject> project;
-    private int year;
+  private final List<BudgetProject> project;
 
-    public ArticleBudgetListComponent2(List<BudgetProject> project, int year) {
-        super("div");
-        this.project = project;
-        this.year = year;
-    }
+  public ArticleBudgetListComponent2(List<BudgetProject> project) {
+    super("div");
+    this.project = project;
+  }
 
-    @Override
-    public String toString() {
-        project.stream().sorted(Comparator.comparing(this::comparator).reversed()).forEach(p -> addContent(new ArticleBudgetComponent(p, year)));
-        return super.toString();
-    }
+  @Override
+  public String toString() {
+    project.stream().sorted(Comparator.comparing(this::comparator).reversed())
+        .forEach(p -> addContent(new ArticleBudgetComponent(p)));
+    return super.toString();
+  }
 
-    private BigDecimal comparator(BudgetProject t) {
-        return t.getAmount(year);
-    }
+  private BigDecimal comparator(BudgetProject t) {
+    return t.getAmount(2021);
+  }
 }

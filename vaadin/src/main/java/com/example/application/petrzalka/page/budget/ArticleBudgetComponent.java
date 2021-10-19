@@ -7,12 +7,10 @@ import com.example.application.petrzalka.page.project.ProjectStatus;
 public class ArticleBudgetComponent extends HtmlTag {
 
   private final BudgetProject project;
-  private final int year;
 
-  public ArticleBudgetComponent(BudgetProject project, int year) {
+  public ArticleBudgetComponent(BudgetProject project) {
     super("div");
     this.project = project;
-    this.year = year;
   }
 
   @Override

@@ -26,12 +26,12 @@ public class BudgetDetailPage extends BasePage {
   }
 
   private HtmlTag budgets() {
-    return new Section().with(new Title("Investičný plán " + year))
-        .with(new ArticleBudgetListComponent2(budgetProject, year));
+    return new Section().with(new Title("Investičný plán "))
+        .with(new ArticleBudgetListComponent2(budgetProject));
   }
 
   @Override
-  public String getFileName() {
-    return PageHeader.BUDGET + year + "/index";
-  }
+    public String getFileName() {
+        return PageHeader.BUDGET + "index";
+    }
 }
