@@ -11,12 +11,10 @@ import com.example.application.petrzalka.page.BasePage;
 
 public class BudgetDetailPage extends BasePage {
 
-  private final Integer year;
   private final List<BudgetProject> budgetProject;
 
-  public BudgetDetailPage(Configuration conf, Integer year, List<BudgetProject> budgetProject) {
+  public BudgetDetailPage(Configuration conf, List<BudgetProject> budgetProject) {
     super(conf);
-    this.year = year;
     this.budgetProject = budgetProject;
   }
 

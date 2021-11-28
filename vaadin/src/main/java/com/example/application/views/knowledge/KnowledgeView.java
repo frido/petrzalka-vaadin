@@ -129,10 +129,8 @@ public class KnowledgeView extends Div {
                 @Override
                 public void run() {
                     ui.access(() -> {
-                        System.out.println("---------->" + 0);
                         tBtn.setEnabled(false);
                     });
-                    System.out.println("---------->" + 1);
                     try {
                         service.testing2();
                     } catch (InterruptedException e) {
@@ -140,7 +138,6 @@ public class KnowledgeView extends Div {
                     }
                     count++;
                     ui.access(() -> {
-                        System.out.println("---------->" + 4);
                         tBtn.setEnabled(true);
                     });
                 }
@@ -156,7 +153,6 @@ public class KnowledgeView extends Div {
 
     private void onNewMessage(EventRow event) {
         ui.access(() -> {
-            System.out.println("---------->" + 2);
             items.add(0, event);
 
             Set<String> objects = items.stream().map(o -> o.getObject()).collect(Collectors.toSet());
@@ -164,7 +160,6 @@ public class KnowledgeView extends Div {
 
             grid.setItems(items);
             grid.getDataProvider().refreshAll();
-            System.out.println("---------->" + 3);
         });
     }
 
