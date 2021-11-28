@@ -18,6 +18,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class MainRunner {
+	
+	// TODO: serviceFacade with all services
 
   @Autowired
   BudgetService budgetService;
@@ -29,6 +31,7 @@ public class MainRunner {
   ProjectService projectService;
 
   public void run(Configuration config) {
+	  // page provider returns list of pages ready to print
     PageWriter pw = new PageWriter(config);
     pw.write(new IndexPage(config, budgetService, grantService, projectService));
     pw.write(new ProjectPage(config, projectService));
@@ -42,4 +45,13 @@ public class MainRunner {
     return projectService.getAllProjects().stream().map(p -> new ProjectDetailPage(config, p))
         .toList();
   }
+  
+  public static void main(String[] args) {
+	  Configuration config = new Configuration();
+	  config.setOutputDir("C:\\home\\repos\\frido.github.io");
+	  MainRunner runner = new MainRunner();
+	  runner.run(config);
+  }
+  
+  
 }

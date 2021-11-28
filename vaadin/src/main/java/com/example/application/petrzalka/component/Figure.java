@@ -5,16 +5,13 @@ import com.example.application.petrzalka.html.HtmlTag;
 
 public class Figure extends HtmlTag {
 
-    private final String source;
-
-    public Figure(String source) {
+    public Figure(String source, String title) {
         super("figure");
-        this.source = source;
+        AHref a = new AHref("", source, new HtmlTag("img").as("src", source));
+        if (title != null) {
+        	a.with(title);
+        }
+        addContent(a);
     }
 
-    @Override
-    public String toString() {
-        addContent(new AHref("", source, new HtmlTag("img").as("src", source)));
-        return super.toString();
-    }
 }

@@ -10,7 +10,7 @@ public class HtmlNoTag extends HtmlTag {
 
     @Override
     public String toString() {
-        return text;
+        return text == null ? "" : text;
     }
 
 }

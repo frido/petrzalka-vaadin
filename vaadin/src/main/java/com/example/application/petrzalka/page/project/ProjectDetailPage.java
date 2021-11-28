@@ -28,10 +28,13 @@ public class ProjectDetailPage extends BasePage {
                 .with(new HtmlNoTag(project.getDetail()));
     }
 
-    private HtmlTag gallery() { // TODO: can be as component
-        HtmlTag gallery = new Div("gallery");
+    private HtmlTag gallery() { 
+        HtmlTag gallery = new Div("gallery row");
         for(Image image : project.getImages()) {
-            gallery.with(new Figure(image.getSource()));
+            gallery.with(
+            		(new Figure(image.getSource(), image.getTitle())
+            				.clazz("col-md-4")
+            			));
         }
         return gallery;
     }
