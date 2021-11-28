@@ -1,6 +1,6 @@
 package com.example.application.petrzalka.page;
 
-import com.example.application.petrzalka.Configuration;
+import com.example.application.Configuration;
 import com.example.application.petrzalka.component.Title;
 import com.example.application.petrzalka.html.HtmlTag;
 import com.example.application.petrzalka.html.Section;

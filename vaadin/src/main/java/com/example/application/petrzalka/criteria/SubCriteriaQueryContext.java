@@ -1,13 +1,15 @@
 package com.example.application.petrzalka.criteria;
 
-import org.apache.commons.lang3.NotImplementedException;
+import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.criteria.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Order;
+import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 
 import com.example.application.petrzalka.page.grant.GrantSubject;
-
-import java.util.List;
 
 public class SubCriteriaQueryContext<T> implements QueryContext<T> {
     private final CriteriaBuilder cb;
@@ -40,7 +42,7 @@ public class SubCriteriaQueryContext<T> implements QueryContext<T> {
 
     @Override
     public Subquery<Integer> subquery() {
-        throw new NotImplementedException("subquery");
+        throw new RuntimeException("subquery");
     }
 
     public Root<T> getRoot() {
@@ -53,11 +55,11 @@ public class SubCriteriaQueryContext<T> implements QueryContext<T> {
     }
 
     public List<GrantSubject> getResultList() {
-        throw new NotImplementedException("getResultList");
+        throw new RuntimeException("getResultList");
     }
 
     @Override
     public void order(List<Order> order) {
-        throw new NotImplementedException("getResultList");
+        throw new RuntimeException("getResultList");
     }
 }

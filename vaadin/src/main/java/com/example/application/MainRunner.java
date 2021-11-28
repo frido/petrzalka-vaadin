@@ -1,4 +1,4 @@
-package com.example.application.petrzalka;
+package com.example.application;
 
 import java.util.List;
 

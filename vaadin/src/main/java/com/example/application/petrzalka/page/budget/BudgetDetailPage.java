@@ -2,7 +2,7 @@ package com.example.application.petrzalka.page.budget;
 
 import java.util.List;
 
-import com.example.application.petrzalka.Configuration;
+import com.example.application.Configuration;
 import com.example.application.petrzalka.component.PageHeader;
 import com.example.application.petrzalka.component.Title;
 import com.example.application.petrzalka.html.HtmlTag;

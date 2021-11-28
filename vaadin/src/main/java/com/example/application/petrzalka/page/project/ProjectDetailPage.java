@@ -2,7 +2,7 @@ package com.example.application.petrzalka.page.project;
 
 import java.util.Optional;
 
-import com.example.application.petrzalka.Configuration;
+import com.example.application.Configuration;
 import com.example.application.petrzalka.component.Figure;
 import com.example.application.petrzalka.component.PageHeader;
 import com.example.application.petrzalka.component.Title;

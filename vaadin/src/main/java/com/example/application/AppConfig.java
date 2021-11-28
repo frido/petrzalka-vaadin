@@ -1,8 +1,6 @@
 package com.example.application;
 
 import java.util.Properties;
-import javax.servlet.http.HttpSessionEvent;
-import javax.servlet.http.HttpSessionListener;
 import javax.sql.DataSource;
 import com.example.application.knowledge.CustomIntegratorProvider;
 import com.example.application.knowledge.CustomInterceptorImpl;
@@ -116,22 +114,4 @@ public class AppConfig {
         return sf;
     }
 
-    @Bean
-    public HttpSessionListener httpSessionListener() {
-
-        MessageQueue messageQueue = MessageQueue.getInstance();
-        return new HttpSessionListener() {
-    
-            @Override
-            public void sessionCreated(HttpSessionEvent hse) {
-                messageQueue.add("HttpSessionListener", "sessionCreated", String.valueOf(hse));
-            }
-        
-            @Override
-            public void sessionDestroyed(HttpSessionEvent hse) {
-                messageQueue.add("HttpSessionListener", "sessionDestroyed", String.valueOf(hse));
-            }
-            
-        };
-    }
 }
